@@ -22,7 +22,11 @@ TRAINING_DATA = DATA_DIR / "training_data.jsonl"
 
 # Set credentials
 CREDENTIALS_PATH = SCRIPT_DIR.parent.parent / "pipeline" / "keys" / "service-account.json"
-os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = str(CREDENTIALS_PATH)
+if CREDENTIALS_PATH.exists():
+    os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = str(CREDENTIALS_PATH)
+    print(f"✓ Using credentials from {CREDENTIALS_PATH}")
+else:
+    print("ℹ️ Using default credentials (Cloud Shell/gcloud auth)")
 
 def create_bucket_if_not_exists():
     """Create GCS bucket for training data"""
