@@ -1,0 +1,29 @@
+{
+    "name": "antigravity-cli",
+    "version": "1.0.0",
+    "description": "Antigravity Interactive CLI - Agent Interface",
+    "type": "module",
+    "main": "index.js",
+    "bin": {
+        "antigravity": "./index.js",
+        "ag": "./index.js"
+    },
+    "scripts": {
+        "start": "node index.js",
+        "dev": "node --watch index.js"
+    },
+    "dependencies": {
+        "chalk": "^5.3.0",
+        "figlet": "^1.7.0",
+        "gradient-string": "^2.0.2",
+        "inquirer": "^9.2.12",
+        "ora": "^8.0.1"
+    },
+    "keywords": [
+        "cli",
+        "agent",
+        "antigravity"
+    ],
+    "author": "l0ve",
+    "license": "MIT"
+}

@@ -1,0 +1,41 @@
+# API Endpoints - key-drop.com / key-drop.app
+# Discovered: 2026-01-07
+
+## Base URL
+https://key-drop.app
+
+## Case Battle Endpoints (v1)
+/CaseBattle/battle              - Create/list battles
+/CaseBattle/bots                - Bot management
+/CaseBattle/cases               - Available cases
+/CaseBattle/cloneBattle/:id     - Clone existing battle [IDOR?]
+/CaseBattle/gameFullData/:id    - Full game data [IDOR?]
+/CaseBattle/gameRounds/:id      - Game rounds data [IDOR?]
+/CaseBattle/joinBot/:gameId     - Join game with bot [Auth bypass?]
+/CaseBattle/joinCaseBattle/:id/:slot - Join battle slot [IDOR?]
+/CaseBattle/leaveBattle/:id     - Leave battle [IDOR?]
+/CaseBattle/organizedCount      - Stats
+/CaseBattle/sell-all/:id        - Sell all items [IDOR? Critical!]
+
+## Case Battle Endpoints (v2)
+/v2/battle                      - Battle listing
+/v2/battle?type=active&limit=15&cursor=0&priceFrom=0&priceTo=undefined
+/v2/battle/joinRandomBots/:gameId  - Join with random bots
+/v2/battle/topBattles           - Top battles
+
+## Potential Vulnerabilities
+
+### IDOR Candidates (test with different IDs)
+- /CaseBattle/gameFullData/:id
+- /CaseBattle/cloneBattle/:id
+- /CaseBattle/sell-all/:id  <-- CRITICAL if exploitable
+- /CaseBattle/leaveBattle/:id
+
+### Auth Bypass Candidates
+- /CaseBattle/joinBot/:gameId
+- /v2/battle/joinRandomBots/:gameId
+
+### Business Logic
+- Can you clone someone else's battle?
+- Can you sell items from someone else's game?
+- Can you leave/manipulate someone else's battle?

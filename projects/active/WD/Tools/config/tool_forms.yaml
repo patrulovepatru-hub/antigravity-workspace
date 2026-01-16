@@ -1,0 +1,330 @@
+# Definición de formularios dinámicos para GUI - Fase 1
+
+forms:
+  # RECON
+  subdomain:
+    name: "Subdomain Enumeration"
+    category: recon
+    fields:
+      - name: domain
+        type: text
+        label: "Dominio"
+        required: true
+        placeholder: "example.com"
+      - name: preset
+        type: select
+        label: "Preset"
+        options: [quick, standard, aggressive]
+        default: standard
+      - name: wordlist
+        type: select
+        label: "Wordlist"
+        options: [small, medium, large, custom]
+      - name: threads
+        type: slider
+        label: "Threads"
+        min: 1
+        max: 200
+        default: 50
+      - name: recursive
+        type: checkbox
+        label: "Recursivo"
+        default: false
+
+  # SCANNING
+  port_scan:
+    name: "Port Scanner"
+    category: scanning
+    fields:
+      - name: target
+        type: text
+        label: "Target"
+        required: true
+        placeholder: "IP o dominio"
+      - name: preset
+        type: select
+        label: "Preset"
+        options: [top20, web, full, stealth]
+        default: top20
+      - name: ports
+        type: text
+        label: "Puertos"
+        placeholder: "22,80,443 o 1-1000"
+        depends_on:
+          preset: custom
+      - name: timing
+        type: slider
+        label: "Timing"
+        min: 0
+        max: 5
+        default: 3
+
+  dir_fuzzing:
+    name: "Directory Fuzzing"
+    category: scanning
+    fields:
+      - name: url
+        type: url
+        label: "URL"
+        required: true
+        placeholder: "https://target.com"
+      - name: preset
+        type: select
+        label: "Preset"
+        options: [quick, standard, deep]
+        default: standard
+      - name: extensions
+        type: text
+        label: "Extensiones"
+        placeholder: "php,html,js"
+      - name: threads
+        type: slider
+        label: "Threads"
+        min: 1
+        max: 200
+        default: 50
+      - name: recursive
+        type: checkbox
+        label: "Recursivo"
+        default: false
+
+  # VULN ASSESSMENT
+  sqli:
+    name: "SQL Injection Scanner"
+    category: vuln
+    fields:
+      - name: url
+        type: url
+        label: "URL con parámetro"
+        required: true
+        placeholder: "https://target.com/page?id=1"
+      - name: param
+        type: text
+        label: "Parámetro"
+        placeholder: "id"
+      - name: preset
+        type: select
+        label: "Preset"
+        options: [quick, standard, deep, stealth]
+        default: standard
+      - name: technique
+        type: multiselect
+        label: "Técnicas"
+        options: [error, boolean, union, time, stacked]
+        default: [error, boolean]
+      - name: level
+        type: slider
+        label: "Nivel"
+        min: 1
+        max: 5
+        default: 3
+      - name: dbms
+        type: select
+        label: "DBMS"
+        options: [auto, mysql, postgresql, mssql, oracle, sqlite]
+        default: auto
+
+  xss:
+    name: "XSS Scanner"
+    category: vuln
+    fields:
+      - name: url
+        type: url
+        label: "URL"
+        required: true
+        placeholder: "https://target.com/search?q="
+      - name: param
+        type: text
+        label: "Parámetro"
+        placeholder: "q"
+      - name: preset
+        type: select
+        label: "Preset"
+        options: [quick, standard, deep]
+        default: standard
+      - name: type
+        type: multiselect
+        label: "Tipos"
+        options: [reflected, stored, dom]
+        default: [reflected]
+
+  lfi:
+    name: "LFI/RFI Scanner"
+    category: vuln
+    fields:
+      - name: url
+        type: url
+        label: "URL"
+        required: true
+        placeholder: "https://target.com/page?file="
+      - name: param
+        type: text
+        label: "Parámetro"
+        required: true
+      - name: preset
+        type: select
+        label: "Preset"
+        options: [quick, standard, deep]
+        default: standard
+      - name: depth
+        type: slider
+        label: "Profundidad"
+        min: 1
+        max: 15
+        default: 6
+
+  ssrf:
+    name: "SSRF Scanner"
+    category: vuln
+    fields:
+      - name: url
+        type: url
+        label: "URL"
+        required: true
+      - name: param
+        type: text
+        label: "Parámetro"
+        required: true
+      - name: preset
+        type: select
+        label: "Preset"
+        options: [quick, standard, deep]
+        default: standard
+      - name: callback
+        type: text
+        label: "Callback URL"
+        placeholder: "https://your-server.com"
+
+  # EXPLOITATION
+  reverse_shell:
+    name: "Reverse Shell Generator"
+    category: exploit
+    fields:
+      - name: lhost
+        type: text
+        label: "LHOST"
+        required: true
+        placeholder: "Tu IP"
+      - name: lport
+        type: number
+        label: "LPORT"
+        required: true
+        default: 4444
+      - name: type
+        type: select
+        label: "Tipo"
+        options: [bash, python, php, nc, powershell]
+        default: bash
+      - name: encode
+        type: checkbox
+        label: "Encodear"
+        default: false
+
+  # REPORTING
+  report:
+    name: "Generate Report"
+    category: reporting
+    fields:
+      - name: project
+        type: text
+        label: "Proyecto"
+        required: true
+      - name: format
+        type: select
+        label: "Formato"
+        options: [executive, technical, bugbounty]
+        default: technical
+      - name: output
+        type: select
+        label: "Salida"
+        options: [html, pdf, md, json]
+        default: html
+
+  # WEB3
+  contract:
+    name: "Contract Analyzer"
+    category: web3
+    fields:
+      - name: target
+        type: text
+        label: "Contract/File"
+        required: true
+        placeholder: "0x... o contract.sol"
+      - name: network
+        type: select
+        label: "Network"
+        options: [ethereum, bsc, polygon, arbitrum, optimism]
+        default: ethereum
+      - name: preset
+        type: select
+        label: "Preset"
+        options: [quick, standard, deep]
+        default: standard
+      - name: no_defi
+        type: checkbox
+        label: "Sin DeFi checks"
+        default: false
+
+  token:
+    name: "Token Analyzer"
+    category: web3
+    fields:
+      - name: address
+        type: text
+        label: "Token Address"
+        required: true
+        placeholder: "0x..."
+      - name: network
+        type: select
+        label: "Network"
+        options: [ethereum, bsc, polygon, arbitrum]
+        default: ethereum
+      - name: check_honeypot
+        type: checkbox
+        label: "Check Honeypot"
+        default: true
+
+  address:
+    name: "Address Profiler"
+    category: web3
+    fields:
+      - name: address
+        type: text
+        label: "Address"
+        required: true
+        placeholder: "0x..."
+      - name: network
+        type: select
+        label: "Network"
+        options: [ethereum, bsc, polygon, arbitrum]
+        default: ethereum
+      - name: tx_history
+        type: checkbox
+        label: "TX History"
+        default: false
+      - name: tx_limit
+        type: slider
+        label: "TX Limit"
+        min: 5
+        max: 50
+        default: 10
+
+  rugpull:
+    name: "Rugpull Scanner"
+    category: web3
+    fields:
+      - name: target
+        type: text
+        label: "Contract/File"
+        required: true
+        placeholder: "0x... o contract.sol"
+      - name: network
+        type: select
+        label: "Network"
+        options: [ethereum, bsc, polygon, arbitrum]
+        default: ethereum
+      - name: preset
+        type: select
+        label: "Preset"
+        options: [quick, standard, deep]
+        default: standard

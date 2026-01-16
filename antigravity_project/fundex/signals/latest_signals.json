@@ -1,0 +1,35 @@
+[
+  {
+    "symbol": "SOL-USD",
+    "timestamp": "2026-01-10 06:56:45.303194",
+    "price": 136.33,
+    "ema_fast": 136.25,
+    "ema_slow": 136.5,
+    "rsi": 57.16,
+    "signal": "HOLD",
+    "strength": 0,
+    "trend": "DOWN"
+  },
+  {
+    "symbol": "ETH-USD",
+    "timestamp": "2026-01-10 06:56:45.506799",
+    "price": 3091.6,
+    "ema_fast": 3088.48,
+    "ema_slow": 3089.2,
+    "rsi": 59.8,
+    "signal": "HOLD",
+    "strength": 0,
+    "trend": "DOWN"
+  },
+  {
+    "symbol": "BNB-USD",
+    "timestamp": "2026-01-10 06:56:46.104945",
+    "price": 900.04,
+    "ema_fast": 901.23,
+    "ema_slow": 899.11,
+    "rsi": 61.5,
+    "signal": "HOLD",
+    "strength": 0,
+    "trend": "UP"
+  }
+]

@@ -1,0 +1,41 @@
+# Path Enumeration - key-drop.com
+# Collected: 2026-01-07
+
+## HTTP Response Codes
+
+### Authentication Endpoints (All 403 - Cloudflare blocked)
+login: 403
+register: 403
+signup: 403
+signin: 403
+auth: 403
+oauth: 403
+callback: 403
+
+### API Endpoints (All 403 - Cloudflare blocked)
+api/users: 403
+api/user: 403
+api/auth: 403
+api/login: 403
+
+### Sensitive Files (All 403 - Cloudflare blocked or doesn't exist)
+.git/config: 403
+.env: 403
+.htaccess: 403
+
+### Admin Paths (All 403)
+wp-admin: 403
+admin: 403
+administrator: 403
+phpmyadmin: 403
+
+### Other
+sitemap.xml: 301 (Redirect - likely to /sitemap/sitemap.xml)
+
+## Analysis
+- Cloudflare WAF is blocking most enumeration attempts
+- All 403 responses - could be:
+  1. Actual forbidden (paths exist but blocked)
+  2. Cloudflare default block for suspicious paths
+  3. Actual 404s masked as 403 (security through obscurity)
+- Need browser automation or authenticated session to bypass

@@ -1,0 +1,35 @@
+# Technology Stack - key-drop.com
+# Collected: 2026-01-07
+
+## CDN/Infrastructure
+- Cloudflare (WAF, CDN, DDoS protection)
+- HTTP/2 and HTTP/3 support
+- ECH (Encrypted Client Hello) enabled
+
+## Frontend
+- jQuery 3.6.1 (from b7e72.network)
+- Custom JS: pre-check_zero.js
+- Cloudflare email protection script
+
+## External Resources
+- CDN: b7e72.network (custom CDN domain)
+  - jquery-3.6.1.min.js
+  - pre-check_zero.js
+  - style.min.css
+  - logo.svg
+  - Social media icons
+
+## Social Media
+- Instagram: @keydropcom_official
+- Facebook: /keydropcom
+- Steam Group: /groups/csbulletsgo
+
+## Protection Mechanisms
+- Cloudflare Bot Management (__cf_bm cookie)
+- JavaScript challenge for bot protection
+- Email obfuscation via Cloudflare
+
+## Notes
+- Site requires JavaScript to function
+- Heavy bot protection - automated scanning will be limited
+- Uses challenge-platform for bot detection

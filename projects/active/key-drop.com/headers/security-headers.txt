@@ -1,0 +1,28 @@
+# Security Headers - key-drop.com
+# Collected: 2026-01-07
+
+## Present Headers
+x-ua-compatible: ie=edge
+x-xss-protection: 1; mode=block
+x-content-type-options: nosniff
+strict-transport-security: max-age=15552000
+server: cloudflare
+
+## Cookies
+__cf_bm (Cloudflare bot management)
+- HttpOnly: Yes
+- Secure: Yes
+- SameSite: None
+- Domain: .key-drop.com
+
+## Missing Headers (Potential Issues)
+- Content-Security-Policy: NOT FOUND
+- X-Frame-Options: NOT FOUND
+- Referrer-Policy: NOT FOUND
+- Permissions-Policy: NOT FOUND
+
+## Analysis
+- Basic security headers present
+- Missing CSP could allow XSS attacks
+- Missing X-Frame-Options could allow clickjacking
+- HSTS enabled but max-age is only ~180 days (could be longer)

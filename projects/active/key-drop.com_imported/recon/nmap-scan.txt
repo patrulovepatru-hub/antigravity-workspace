@@ -1,0 +1,89 @@
+Starting Nmap 7.98 ( https://nmap.org ) at 2026-01-07 17:22 -0500
+Nmap scan report for key-drop.com (104.18.8.108)
+Host is up (0.027s latency).
+Other addresses for key-drop.com (not scanned): 104.18.9.108 2606:4700::6812:96c 2606:4700::6812:86c
+
+PORT     STATE SERVICE  VERSION
+80/tcp   open  http     Cloudflare http proxy
+| http-headers: 
+|   Date: Wed, 07 Jan 2026 22:22:49 GMT
+|   Content-Type: text/html
+|   Content-Length: 167
+|   Connection: close
+|   Cache-Control: max-age=3600
+|   Expires: Wed, 07 Jan 2026 23:22:49 GMT
+|   Location: https://key-drop.com/
+|   Set-Cookie: __cf_bm=ghmocliZNVTnbEqXFb71imtYO5bEoJbLBd3Q0_2QBEw-1767824569-1.0.1.1-P2bq0AmbdIDDTOqy7GhmpL7EgpVRz8N3zjBHlZPh.Iy0rrLaaF2R8ryLAXVyOMx9oFqJeAWcJp4HIYAhOQMjeOVc0v9N51SFokDzqCTWCwQ; path=/; expires=Wed, 07-Jan-26 22:52:49 GMT; domain=.key-drop.com; HttpOnly
+|   X-Content-Type-Options: nosniff
+|   Server: cloudflare
+|   CF-RAY: 9ba6db2a0b2a03c9-MAD
+|   alt-svc: h3=":443"; ma=86400
+|   
+|_  (Request type: GET)
+|_http-server-header: cloudflare
+|_http-title: Did not follow redirect to https://key-drop.com/
+443/tcp  open  ssl/http Cloudflare http proxy
+|_http-server-header: cloudflare
+| http-headers: 
+|   Date: Wed, 07 Jan 2026 22:22:50 GMT
+|   Content-Type: text/html; charset=UTF-8
+|   Transfer-Encoding: chunked
+|   Connection: close
+|   CF-RAY: 9ba6db2a2ef80061-MAD
+|   Vary: Accept-Encoding
+|   Expires: Thu, 01 Jan 1970 00:00:01 GMT
+|   Cache-Control: no-cache
+|   x-ua-compatible: ie=edge
+|   x-xss-protection: 1; mode=block
+|   x-content-type-options: nosniff
+|   referrer-policy: strict-origin-when-cross-origin
+|   zero: zero-waf
+|   zero-id: 013db76999dffffba652683ba8cbb836-d56d6
+|   cf-cache-status: DYNAMIC
+|   Set-Cookie: __cf_bm=8wzmr5Vli0SCeoWX_KeJioWVrWpnvYAb7.J0_gC81rA-1767824570-1.0.1.1-toOxcGjeyhjjuJD2K2kmn5yLo_rlJ0aVA3Vc.VZfBuV_O95gkH8JdmOSlBVjostmA.gFYZKwIoHCp8r1ofmAkvIXc4oV97SHp3IpzmXmeeE; path=/; expires=Wed, 07-Jan-26 22:52:50 GMT; domain=.key-drop.com; HttpOnly; Secure; SameSite=None
+|   Strict-Transport-Security: max-age=15552000
+|   Server: cloudflare
+|   alt-svc: h3=":443"; ma=86400
+|   
+|_  (Request type: GET)
+|_http-title: Key-Drop.com - Open CS:GO cases, get the best skins for pennies
+8080/tcp open  http     Cloudflare http proxy
+| http-headers: 
+|   Date: Wed, 07 Jan 2026 22:22:49 GMT
+|   Content-Type: text/html
+|   Content-Length: 167
+|   Connection: close
+|   Cache-Control: max-age=3600
+|   Expires: Wed, 07 Jan 2026 23:22:49 GMT
+|   Location: https://key-drop.com/
+|   Set-Cookie: __cf_bm=bRbgfpL3Ipw14FVaSEVXlyNI8sdGVlPk9KlTio_1tcE-1767824569-1.0.1.1-z4PTJDAdYPxLweNJclhwUMWlGGeFxfHtwiMOy4d42MqtpN_r83bucCjfW2Qw7kJGRq8nus0cu7yV7W7TNKtseAwVJL41Kv4kjS_gA5N5u3s; path=/; expires=Wed, 07-Jan-26 22:52:49 GMT; domain=.key-drop.com; HttpOnly
+|   X-Content-Type-Options: nosniff
+|   Server: cloudflare
+|   CF-RAY: 9ba6db291f783c8a-MAD
+|   alt-svc: h3=":443"; ma=86400
+|   
+|_  (Request type: GET)
+|_http-server-header: cloudflare
+|_http-title: Did not follow redirect to https://key-drop.com/
+8443/tcp open  ssl/http Cloudflare http proxy
+|_http-server-header: cloudflare
+| http-headers: 
+|   Date: Wed, 07 Jan 2026 22:22:50 GMT
+|   Content-Type: text/plain; charset=UTF-8
+|   Content-Length: 15
+|   Connection: close
+|   Strict-Transport-Security: max-age=15552000
+|   X-Content-Type-Options: nosniff
+|   X-Frame-Options: SAMEORIGIN
+|   Referrer-Policy: same-origin
+|   Cache-Control: private, max-age=0, no-store, no-cache, must-revalidate, post-check=0, pre-check=0
+|   Expires: Thu, 01 Jan 1970 00:00:01 GMT
+|   Server: cloudflare
+|   CF-RAY: 9ba6db2a3ba3d8ef-MAD
+|   alt-svc: h3=":8443"; ma=86400
+|   
+|_  (Request type: GET)
+|_http-title: Site doesn't have a title (text/plain; charset=UTF-8).
+
+Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+Nmap done: 1 IP address (1 host up) scanned in 14.13 seconds

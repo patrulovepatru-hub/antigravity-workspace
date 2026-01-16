@@ -1,0 +1,10 @@
+{
+  "balance": 5000,
+  "position": null,
+  "entry_price": 0,
+  "position_size": 0,
+  "trades": [],
+  "daily_pnl": 0,
+  "start_date": "2026-01-10",
+  "status": "ACTIVE"
+}

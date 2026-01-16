@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unit Economy | Family Capital</title>
+    <!-- Fonts: Inter for UI, Orbitron for Numbers/Headers -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Orbitron:wght@500;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="app-container">
+        <!-- Sidebar / Navigation -->
+        <aside class="sidebar">
+            <div class="logo">
+                <span class="icon">💠</span>
+                <h1>UNIT<span class="highlight">ECON</span></h1>
+            </div>
+            <nav>
+                <button class="nav-btn active" data-view="dashboard">
+                    <span class="icon">📊</span> Dashboard
+                </button>
+                <button class="nav-btn" data-view="transactions">
+                    <span class="icon">📝</span> Log Flow
+                </button>
+                <button class="nav-btn" data-view="metrics">
+                    <span class="icon">📈</span> Metrics
+                </button>
+            </nav>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <header class="top-bar">
+                <h2 id="page-title">Dashboard</h2>
+                <div class="user-profile">
+                    <span>Family Admin</span>
+                    <div class="avatar">A</div>
+                </div>
+            </header>
+
+            <!-- Dashboard View -->
+            <section id="dashboard" class="view-section active">
+                <div class="kpi-grid">
+                    <div class="kpi-card glass">
+                        <h3>Total Capital</h3>
+                        <div class="value money" id="total-capital">$0.00</div>
+                        <div class="trend positive">+0% this month</div>
+                    </div>
+                    <div class="kpi-card glass">
+                        <h3>Monthly In (Entrance)</h3>
+                        <div class="value money positive" id="monthly-in">$0.00</div>
+                    </div>
+                    <div class="kpi-card glass">
+                        <h3>Monthly Out (Exit)</h3>
+                        <div class="value money negative" id="monthly-out">$0.00</div>
+                    </div>
+                    <div class="kpi-card glass">
+                        <h3>Net Flow</h3>
+                        <div class="value money" id="net-flow">$0.00</div>
+                    </div>
+                </div>
+
+                <div class="charts-container">
+                    <div class="chart-card glass">
+                        <h3>Capital Growth</h3>
+                        <canvas id="capitalChart"></canvas>
+                    </div>
+                    <div class="chart-card glass">
+                        <h3>Income vs Expenses</h3>
+                        <canvas id="flowChart"></canvas>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Transactions View -->
+            <section id="transactions" class="view-section hidden">
+                <div class="form-card glass">
+                    <h3>Log New Entry</h3>
+                    <form id="transaction-form">
+                        <div class="form-group">
+                            <label>Type</label>
+                            <div class="toggle-switch">
+                                <input type="radio" id="type-in" name="type" value="in" checked>
+                                <label for="type-in" class="type-btn in">Entrance (In)</label>
+                                <input type="radio" id="type-out" name="type" value="out">
+                                <label for="type-out" class="type-btn out">Exit (Out)</label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Amount</label>
+                            <input type="number" id="amount" placeholder="0.00" step="0.01" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Description</label>
+                            <input type="text" id="description" placeholder="e.g. Salary, Groceries" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Category</label>
+                            <select id="category">
+                                <option value="salary">Salary/Wages</option>
+                                <option value="investment">Investment Return</option>
+                                <option value="housing">Housing</option>
+                                <option value="food">Food</option>
+                                <option value="transport">Transport</option>
+                                <option value="utilities">Utilities</option>
+                                <option value="growth">Capital Injection</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="submit-btn">Record Transaction</button>
+                    </form>
+                </div>
+
+                <div class="recent-transactions glass">
+                    <h3>Recent History</h3>
+                    <ul id="transaction-list">
+                        <!-- Items will be injected here -->
+                    </ul>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Chart.js for charts -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="app.js"></script>
+</body>
+
+</html>

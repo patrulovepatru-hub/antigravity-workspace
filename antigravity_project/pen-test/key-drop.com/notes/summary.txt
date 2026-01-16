@@ -1,0 +1,137 @@
+# Pentest Enumeration Report - key-drop.com
+# Date: 2026-01-07
+# Phase: Reconnaissance Complete
+
+================================================================================
+                              EXECUTIVE SUMMARY
+================================================================================
+
+Target: key-drop.com (CS:GO case opening gambling site)
+Status: Initial enumeration complete
+Protection Level: HIGH (Cloudflare + Zero WAF dual protection)
+
+================================================================================
+                              INFRASTRUCTURE
+================================================================================
+
+## Network
+- IPs: 104.18.8.108, 104.18.9.108 (Cloudflare)
+- IPv6: 2606:4700::6812:86c, 2606:4700::6812:96c
+- Open Ports: 80 (redirect), 443 (main), 8080 (redirect), 8443 (error)
+
+## Subdomains Found
+- www.key-drop.com     (main mirror)
+- cdn.key-drop.com     (content delivery)
+- ws.key-drop.com      (WebSocket - ATTACK VECTOR)
+
+## Technology Stack
+- CDN/WAF: Cloudflare
+- Secondary WAF: Zero WAF (custom)
+- Frontend: jQuery 3.6.1
+- Email: ProtonMail
+- SSL: Google Trust Services, TLS 1.2/1.3, all A-grade ciphers
+
+================================================================================
+                         CONFIRMED VULNERABILITIES
+================================================================================
+
+## HIGH RISK
+1. Missing X-Frame-Options    -> Clickjacking possible
+2. Insecure Cookie (key-lang) -> No Secure/HttpOnly flags
+3. BREACH Attack Potential    -> Compression + HTTPS
+
+## MEDIUM RISK
+4. No Content-Security-Policy -> XSS not browser-mitigated
+5. WAF Type Disclosure        -> Allows targeted bypass research
+
+## LOW RISK
+6. Information in headers (zero-id, cf-ray)
+7. robots.txt exposes 24 sensitive paths
+
+================================================================================
+                          INTERESTING ENDPOINTS
+================================================================================
+
+/ProvablyFair/*     - Gambling verification (test for manipulation)
+/user/profile/*     - User profiles (test for IDOR)
+/panel/profil/*     - User/Admin panel
+/case-battle/*      - PvP gambling feature
+?code=*             - Referral codes (test for injection)
+/api/*              - API (blocked by WAF)
+
+================================================================================
+                          ATTACK SURFACE ANALYSIS
+================================================================================
+
+## Primary Attack Vectors (Recommended Focus)
+
+1. **WebSocket (ws.key-drop.com)**
+   - Real-time gaming communications
+   - Often less protected than HTTP
+   - Test: Auth bypass, message tampering, race conditions
+
+2. **IDOR on User Profiles**
+   - /user/profile/[ID] pattern
+   - Test with authenticated session
+   - Could leak PII, balances, transaction history
+
+3. **Clickjacking**
+   - No X-Frame-Options on main site
+   - Can frame betting/deposit actions
+   - High impact on gambling site
+
+4. **Referral Code Parameter**
+   - ?code= parameter
+   - Test: SQL injection, XSS, logic flaws
+   - Bonus manipulation potential
+
+5. **ProvablyFair System**
+   - Cryptographic verification of gambling
+   - Implementation flaws = predictable outcomes
+   - Review algorithm if accessible
+
+## Blocked by WAF (Need Bypass)
+- Direct API enumeration
+- Directory brute-force
+- Automated vulnerability scanning
+
+================================================================================
+                           NEXT STEPS
+================================================================================
+
+1. [ ] Browser automation to bypass JS challenge
+2. [ ] Authenticated testing with real account
+3. [ ] WebSocket protocol analysis
+4. [ ] Manual IDOR testing on user profiles
+5. [ ] XSS hunting in user-controlled fields
+6. [ ] WAF bypass techniques (Zero WAF specific)
+7. [ ] API endpoint discovery via JS analysis
+8. [ ] Payment/withdrawal flow analysis
+
+================================================================================
+                              FILES INDEX
+================================================================================
+
+/pen-test/key-drop.com/
+├── endpoints/
+│   ├── gobuster-common.txt    - Directory enumeration results
+│   ├── path-probe.txt         - Manual path probing
+│   └── robots-txt.txt         - robots.txt analysis
+├── headers/
+│   └── security-headers.txt   - HTTP security headers
+├── notes/
+│   └── summary.txt            - This file
+├── recon/
+│   ├── critical-findings.txt  - Important discoveries
+│   ├── dns-info.txt           - DNS records
+│   ├── nmap-scan.txt          - Port scan results
+│   ├── nikto-scan.txt         - Nikto vulnerability scan
+│   ├── ssl-cert.txt           - Certificate details
+│   ├── ssl-ciphers.txt        - Cipher suite analysis
+│   ├── technology-stack.txt   - Tech fingerprinting
+│   ├── vulnerabilities.txt    - Confirmed vulnerabilities
+│   └── whatweb-scan.txt       - WhatWeb results
+└── subdomains/
+    └── found.txt              - Discovered subdomains
+
+================================================================================

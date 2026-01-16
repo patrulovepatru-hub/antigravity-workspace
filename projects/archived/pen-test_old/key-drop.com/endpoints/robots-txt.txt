@@ -1,0 +1,41 @@
+# robots.txt - key-drop.com
+# Collected: 2026-01-07
+
+User-agent: ia_archiver
+Disallow: /
+User-agent: *
+Allow: */case-battle/list*
+Disallow: */?code=*
+Disallow: */ProvablyFair/*
+Disallow: */user/profile/*
+Disallow: */panel/profil/*
+Disallow: */case-battle/*
+Disallow: */policy
+Disallow: */tos
+Sitemap: https://key-drop.com/sitemap/sitemap.xml
+
+# Archive bots blocked:
+- ia_archiver
+- archive.today
+- mementoweb
+- archive.is_bot
+- Wayback Save Page
+- archive.it_bot
+- webcite
+- TimeTravel-API
+- archive.org_bot
+- arquivo-web-crawler
+- UKWA
+- loc.gov_bot
+- Stanford
+- TSA_ARCHIVE
+- HTTrack
+
+## Interesting Paths Discovered
+/ProvablyFair/*     - Provably fair verification (gambling)
+/user/profile/*     - User profiles (test for IDOR)
+/panel/profil/*     - User/Admin panel
+/case-battle/*      - Case battle feature
+?code=*             - Referral code parameter
+/policy             - Privacy policy
+/tos                - Terms of service

@@ -1,0 +1,23 @@
+# Vertex AI Fine-tuning Configuration
+# For Llama 3 8B on user's personal data
+
+project_id: "gen-lang-client-0988614926"
+location: "us-central1"
+
+# Model configuration
+base_model: "meta/llama3-8b-instruct"
+tuned_model_display_name: "antigravity-personal-v1"
+
+# Training configuration
+training:
+  epochs: 3
+  learning_rate_multiplier: 1.0
+  adapter_size: "ADAPTER_SIZE_FOUR"  # LoRA rank 4, efficient
+  
+# Data
+training_data:
+  gcs_uri: "gs://antigravity-llm-data/training_data.jsonl"
+  
+# Output
+output:
+  gcs_bucket: "gs://antigravity-llm-data/models/"

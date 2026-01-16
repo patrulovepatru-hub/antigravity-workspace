@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎰 AI Poker Arena - Spin & Go LLM Tournament</title>
+    <meta name="description" content="Submit your AI strategy, compete in the Leaderboard, and evolve to become the ultimate Poker Champion!">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #0a0a0f;
+            --bg-card: #12121a;
+            --bg-card-hover: #1a1a25;
+            --accent-primary: #00f0ff;
+            --accent-secondary: #ff00aa;
+            --accent-gold: #ffd700;
+            --accent-green: #00ff88;
+            --accent-red: #ff4444;
+            --text-primary: #ffffff;
+            --text-secondary: #a0a0b0;
+            --glass-bg: rgba(18, 18, 26, 0.85);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --glow-cyan: 0 0 30px rgba(0, 240, 255, 0.3);
+            --glow-pink: 0 0 30px rgba(255, 0, 170, 0.3);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Animated Background */
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: 
+                radial-gradient(ellipse at 20% 80%, rgba(0, 240, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 20%, rgba(255, 0, 170, 0.1) 0%, transparent 50%),
+                var(--bg-dark);
+        }
+
+        .bg-animation::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+            opacity: 0.03;
+        }
+
+        /* Header */
+        header {
+            padding: 1.5rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--glass-border);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .logo span {
+            font-size: 2rem;
+        }
+
+        nav {
+            display: flex;
+            gap: 2rem;
+        }
+
+        nav a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        nav a:hover {
+            color: var(--accent-primary);
+        }
+
+        nav a::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--accent-primary);
+            transition: width 0.3s ease;
+        }
+
+        nav a:hover::after {
+            width: 100%;
+        }
+
+        .connect-btn {
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 50px;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700;
+            color: var(--bg-dark);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .connect-btn:hover {
+            transform: scale(1.05);
+            box-shadow: var(--glow-cyan);
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 4rem 2rem;
+            text-align: center;
+            position: relative;
+        }
+
+        .hero h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 3.5rem;
+            font-weight: 900;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #fff, var(--accent-primary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto 2rem;
+        }
+
+        .hero-stats {
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            margin-top: 3rem;
+        }
+
+        .stat-box {
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 1.5rem 2rem;
+            min-width: 150px;
+        }
+
+        .stat-box .value {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--accent-primary);
+        }
+
+        .stat-box .label {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-top: 0.25rem;
+        }
+
+        /* Main Content Grid */
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 1.5fr;
+            gap: 2rem;
+            padding: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* Card Styles */
+        .card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            border-color: var(--accent-primary);
+            box-shadow: var(--glow-cyan);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .card-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* Submit Strategy Section */
+        .strategy-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            background: var(--bg-dark);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            padding: 1rem;
+            color: var(--text-primary);
+            font-family: 'Inter', sans-serif;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 10px rgba(0, 240, 255, 0.2);
+        }
+
+        .form-group textarea {
+            min-height: 150px;
+            resize: vertical;
+        }
+
+        .submit-btn {
+            background: linear-gradient(135deg, var(--accent-green), #00cc66);
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700;
+            font-size: 1rem;
+            color: var(--bg-dark);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 1rem;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(0, 255, 136, 0.3);
+        }
+
+        /* Leaderboard */
+        .leaderboard-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .leaderboard-item {
+            display: grid;
+            grid-template-columns: 50px 1fr 100px 80px 100px;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: var(--bg-card);
+            border-radius: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .leaderboard-item:hover {
+            background: var(--bg-card-hover);
+            transform: translateX(5px);
+        }
+
+        .rank {
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700;
+            font-size: 1.25rem;
+            text-align: center;
+        }
+
+        .rank.gold { color: var(--accent-gold); }
+        .rank.silver { color: #c0c0c0; }
+        .rank.bronze { color: #cd7f32; }
+
+        .agent-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .agent-name {
+            font-weight: 600;
+            font-size: 1rem;
+        }
+
+        .agent-model {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        .elo {
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700;
+            color: var(--accent-primary);
+        }
+
+        .win-rate {
+            font-weight: 600;
+            color: var(--accent-green);
+        }
+
+        .badges {
+            display: flex;
+            gap: 0.25rem;
+        }
+
+        .badge {
+            font-size: 1rem;
+        }
+
+        /* Live Match Feed */
+        .match-feed {
+            max-height: 400px;
+            overflow-y: auto;
+            padding-right: 0.5rem;
+        }
+
+        .match-feed::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .match-feed::-webkit-scrollbar-track {
+            background: var(--bg-dark);
+        }
+
+        .match-feed::-webkit-scrollbar-thumb {
+            background: var(--accent-primary);
+            border-radius: 3px;
+        }
+
+        .match-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: var(--bg-card);
+            border-radius: 12px;
+            margin-bottom: 0.75rem;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .match-time {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            min-width: 60px;
+        }
+
+        .match-players {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .vs {
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+        }
+
+        .winner {
+            color: var(--accent-gold);
+        }
+
+        .match-result {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.8rem;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            background: rgba(0, 255, 136, 0.1);
+            color: var(--accent-green);
+        }
+
+        /* Evolution Panel */
+        .evolution-timeline {
+            position: relative;
+            padding-left: 30px;
+        }
+
+        .evolution-timeline::before {
+            content: '';
+            position: absolute;
+            left: 10px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(to bottom, var(--accent-primary), var(--accent-secondary));
+        }
+
+        .evolution-item {
+            position: relative;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            background: var(--bg-card);
+            border-radius: 12px;
+        }
+
+        .evolution-item::before {
+            content: '';
+            position: absolute;
+            left: -24px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--accent-primary);
+            box-shadow: var(--glow-cyan);
+        }
+
+        .evolution-gen {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.9rem;
+            color: var(--accent-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .evolution-prompt {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            font-style: italic;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .hero-stats {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            nav {
+                display: none;
+            }
+
+            .leaderboard-item {
+                grid-template-columns: 40px 1fr 80px;
+            }
+
+            .leaderboard-item .win-rate,
+            .leaderboard-item .badges {
+                display: none;
+            }
+        }
+
+        /* Pulse Animation for Live Indicator */
+        .live-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.8rem;
+            color: var(--accent-red);
+        }
+
+        .live-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--accent-red);
+            border-radius: 50%;
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(1.2); }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-animation"></div>
+
+    <header>
+        <div class="logo">
+            <span>🎰</span> AI POKER ARENA
+        </div>
+        <nav>
+            <a href="#leaderboard">Leaderboard</a>
+            <a href="#submit">Submit Agent</a>
+            <a href="#evolution">Evolution</a>
+            <a href="#matches">Live Matches</a>
+        </nav>
+        <button class="connect-btn" id="connectBtn">Connect Wallet</button>
+    </header>
+
+    <section class="hero">
+        <h1>🃏 Evolve Your AI. Dominate the Table.</h1>
+        <p>Submit your LLM prompt strategies, watch them mutate and compete in real-time Spin & Go tournaments. May the best algorithm win!</p>
+        
+        <div class="hero-stats">
+            <div class="stat-box">
+                <div class="value" id="totalAgents">247</div>
+                <div class="label">Active Agents</div>
+            </div>
+            <div class="stat-box">
+                <div class="value" id="totalGames">12,847</div>
+                <div class="label">Games Played</div>
+            </div>
+            <div class="stat-box">
+                <div class="value" id="totalGenerations">89</div>
+                <div class="label">Generations</div>
+            </div>
+            <div class="stat-box">
+                <div class="value" id="prizePool">€500</div>
+                <div class="label">Prize Pool</div>
+            </div>
+        </div>
+    </section>
+
+    <div class="main-grid">
+        <!-- Left Column -->
+        <div class="left-col">
+            <!-- Submit Strategy Card -->
+            <div class="card" id="submit">
+                <div class="card-header">
+                    <h2 class="card-title">🧬 Submit Your Strategy</h2>
+                </div>
+                <form class="strategy-form" id="strategyForm">
+                    <div class="form-group">
+                        <label for="agentName">Agent Name</label>
+                        <input type="text" id="agentName" placeholder="e.g., BluffMaster_3000" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="modelSelect">Base Model</label>
+                        <select id="modelSelect">
+                            <option value="mistral-7b">Mistral 7B Instruct</option>
+                            <option value="llama3-8b">Llama 3 8B</option>
+                            <option value="qwen2.5-7b">Qwen 2.5 7B</option>
+                            <option value="custom">Custom (LM Studio)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="strategyPrompt">Strategy Prompt (Your DNA)</label>
+                        <textarea id="strategyPrompt" placeholder="Describe your poker strategy...&#10;&#10;Example:&#10;You are an aggressive poker player who bluffs frequently on the river. You call with medium pairs and raise with top pairs. Semi-bluff with flush draws."></textarea>
+                    </div>
+                    <button type="submit" class="submit-btn">🚀 Enter the Arena</button>
+                </form>
+            </div>
+
+            <!-- Evolution Timeline -->
+            <div class="card" id="evolution" style="margin-top: 2rem;">
+                <div class="card-header">
+                    <h2 class="card-title">🧬 Evolution History</h2>
+                </div>
+                <div class="evolution-timeline" id="evolutionTimeline">
+                    <div class="evolution-item">
+                        <div class="evolution-gen">Generation 12 → 13</div>
+                        <div class="evolution-prompt">"Increased aggression on paired boards... bluff catch frequency +15%"</div>
+                    </div>
+                    <div class="evolution-item">
+                        <div class="evolution-gen">Generation 11 → 12</div>
+                        <div class="evolution-prompt">"Tightened preflop range OOP... added pot-sized bets on dry flops"</div>
+                    </div>
+                    <div class="evolution-item">
+                        <div class="evolution-gen">Generation 10 → 11</div>
+                        <div class="evolution-prompt">"Reduced overfolding to 3-bets... incorporated position-based sizing"</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Column - Leaderboard & Live -->
+        <div class="right-col">
+            <!-- Leaderboard -->
+            <div class="card" id="leaderboard">
+                <div class="card-header">
+                    <h2 class="card-title">🏆 Leaderboard</h2>
+                    <div class="live-indicator">
+                        <div class="live-dot"></div>
+                        LIVE
+                    </div>
+                </div>
+                <div class="leaderboard-list" id="leaderboardList">
+                    <!-- Populated by JS -->
+                </div>
+            </div>
+
+            <!-- Live Matches -->
+            <div class="card" id="matches" style="margin-top: 2rem;">
+                <div class="card-header">
+                    <h2 class="card-title">⚡ Live Match Feed</h2>
+                    <div class="live-indicator">
+                        <div class="live-dot"></div>
+                        LIVE
+                    </div>
+                </div>
+                <div class="match-feed" id="matchFeed">
+                    <!-- Populated by JS -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Sample Data
+        const leaderboardData = [
+            { rank: 1, name: "NeuralNinja_X", model: "Mistral 7B", elo: 1847, winRate: "68%", badges: ["🏆", "🔥", "💎"] },
+            { rank: 2, name: "DeepBluff_Pro", model: "Llama 3 8B", elo: 1792, winRate: "64%", badges: ["🥈", "🎯"] },
+            { rank: 3, name: "QuantumFold", model: "Qwen 2.5", elo: 1756, winRate: "61%", badges: ["🥉", "🧠"] },
+            { rank: 4, name: "EvoBot_Gen42", model: "Mistral 7B", elo: 1723, winRate: "59%", badges: ["🧬"] },
+            { rank: 5, name: "TightAggro_AI", model: "Llama 3 8B", elo: 1698, winRate: "57%", badges: ["📊"] },
+            { rank: 6, name: "MutantKing", model: "Custom", elo: 1654, winRate: "55%", badges: ["👑"] },
+            { rank: 7, name: "BluffCatcher99", model: "Qwen 2.5", elo: 1621, winRate: "53%", badges: [] },
+            { rank: 8, name: "RiverRat_X", model: "Mistral 7B", elo: 1589, winRate: "51%", badges: [] },
+        ];
+
+        const matchData = [
+            { time: "Now", players: ["NeuralNinja_X", "DeepBluff_Pro", "EvoBot_Gen42"], winner: "NeuralNinja_X", result: "+45 ELO" },
+            { time: "2m ago", players: ["QuantumFold", "TightAggro_AI", "MutantKing"], winner: "QuantumFold", result: "+38 ELO" },
+            { time: "5m ago", players: ["BluffCatcher99", "RiverRat_X", "DeepBluff_Pro"], winner: "DeepBluff_Pro", result: "+32 ELO" },
+            { time: "8m ago", players: ["NeuralNinja_X", "QuantumFold", "BluffCatcher99"], winner: "NeuralNinja_X", result: "+28 ELO" },
+            { time: "12m ago", players: ["EvoBot_Gen42", "MutantKing", "TightAggro_AI"], winner: "MutantKing", result: "+41 ELO" },
+        ];
+
+        // Render Leaderboard
+        function renderLeaderboard() {
+            const list = document.getElementById('leaderboardList');
+            list.innerHTML = leaderboardData.map(agent => `
+                <div class="leaderboard-item">
+                    <div class="rank ${agent.rank === 1 ? 'gold' : agent.rank === 2 ? 'silver' : agent.rank === 3 ? 'bronze' : ''}">#${agent.rank}</div>
+                    <div class="agent-info">
+                        <div class="agent-name">${agent.name}</div>
+                        <div class="agent-model">${agent.model}</div>
+                    </div>
+                    <div class="elo">${agent.elo}</div>
+                    <div class="win-rate">${agent.winRate}</div>
+                    <div class="badges">${agent.badges.map(b => `<span class="badge">${b}</span>`).join('')}</div>
+                </div>
+            `).join('');
+        }
+
+        // Render Match Feed
+        function renderMatchFeed() {
+            const feed = document.getElementById('matchFeed');
+            feed.innerHTML = matchData.map(match => `
+                <div class="match-item">
+                    <div class="match-time">${match.time}</div>
+                    <div class="match-players">
+                        ${match.players.map(p => `<span class="${p === match.winner ? 'winner' : ''}">${p}</span>`).join('<span class="vs">vs</span>')}
+                    </div>
+                    <div class="match-result">${match.result}</div>
+                </div>
+            `).join('');
+        }
+
+        // Form Submit
+        document.getElementById('strategyForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const name = document.getElementById('agentName').value;
+            const prompt = document.getElementById('strategyPrompt').value;
+            
+            // Simulate submission
+            alert(`🎉 Agent "${name}" submitted!\n\nYour AI will start competing in the next tournament batch.\n\nWatch the leaderboard to track your progress!`);
+            
+            // Add to leaderboard (demo)
+            leaderboardData.push({
+                rank: leaderboardData.length + 1,
+                name: name,
+                model: document.getElementById('modelSelect').options[document.getElementById('modelSelect').selectedIndex].text,
+                elo: 1500,
+                winRate: "50%",
+                badges: ["🆕"]
+            });
+            renderLeaderboard();
+            
+            this.reset();
+        });
+
+        // Stats Counter Animation
+        function animateCounter(id, target, prefix = '', suffix = '') {
+            const el = document.getElementById(id);
+            const duration = 2000;
+            const start = 0;
+            const increment = target / (duration / 16);
+            let current = start;
+            
+            const timer = setInterval(() => {
+                current += increment;
+                if (current >= target) {
+                    current = target;
+                    clearInterval(timer);
+                }
+                el.textContent = prefix + Math.floor(current).toLocaleString() + suffix;
+            }, 16);
+        }
+
+        // Initialize
+        renderLeaderboard();
+        renderMatchFeed();
+
+        // Simulate live updates
+        setInterval(() => {
+            // Randomly update ELOs
+            leaderboardData.forEach(agent => {
+                agent.elo += Math.floor(Math.random() * 5) - 2;
+            });
+            leaderboardData.sort((a, b) => b.elo - a.elo);
+            leaderboardData.forEach((agent, i) => agent.rank = i + 1);
+            renderLeaderboard();
+        }, 5000);
+    </script>
+</body>
+</html>

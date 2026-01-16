@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GameGearGuide - Expert Reviews for Pro Gaming Peripherals | Best Gaming Mouse 2024</title>
+    <meta name="description" content="Expert reviews for pro gaming peripherals. Find the best gaming mouse 2024, mechanical keyboard reviews, wireless gaming headsets, and RGB gaming keyboards.">
+    <meta name="keywords" content="best gaming mouse 2024, mechanical keyboard review, wireless gaming headset, gaming mouse pad, RGB gaming keyboard">
+    <meta name="robots" content="index, follow">
+    
+    <script>
+    function getAmazonLink(keyword) {
+        const locale = navigator.language.toLowerCase();
+        const country = locale.split('-')[1] || 'us';
+        const stores = {
+            'us': {domain: 'amazon.com', tag: 'pat0402-20'},
+            'gb': {domain: 'amazon.co.uk', tag: 'pat0f5b-21'},
+            'es': {domain: 'amazon.es', tag: 'pat09b-21'},
+            'it': {domain: 'amazon.it', tag: 'pat0f5b-21'},
+            'fr': {domain: 'amazon.fr', tag: 'pat04a-21'},
+            'de': {domain: 'amazon.de', tag: 'pat09a-21'}
+        };
+        const store = stores[country] || stores['us'];
+        return `https://${store.domain}/s?k=${keyword}&tag=${store.tag}`;
+    }
+    </script>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f8f9fa;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Header */
+        header {
+            background: linear-gradient(135deg, #1a365d 0%, #2d3748 100%);
+            color: white;
+            padding: 1rem 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #4a90e2;
+        }
+        
+        nav ul {
+            list-style: none;
+            display: flex;
+            gap: 2rem;
+        }
+        
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+        
+        nav a:hover {
+            color: #4a90e2;
+        }
+        
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, #2d3748 0%, #4a5568 100%);
+            color: white;
+            text-align: center;
+            padding: 4rem 0;
+        }
+        
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+        
+        .hero p {
+            font-size: 1.3rem;
+            color: #e2e8f0;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        /* Products Section */
+        .products {
+            padding: 5rem 0;
+            background: white;
+        }
+        
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            color: #1a365d;
+            margin-bottom: 3rem;
+            font-weight: 600;
+        }
+        
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+        
+        .product-card {
+            background: #f7fafc;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 1px solid #e2e8f0;
+        }
+        
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+        
+        .product-card h3 {
+            font-size: 1.4rem;
+            color: #1a365d;
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+        
+        .product-card p {
+            color: #4a5568;
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+        
+        .cta-button {
+            background: linear-gradient(135deg, #4a90e2 0%, #357abd 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            width: 100%;
+        }
+        
+        .cta-button:hover {
+            background: linear-gradient(135deg, #357abd 0%, #2c5aa0 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(74, 144, 226, 0.3);
+        }
+        
+        /* Footer */
+        footer {
+            background: #1a365d;
+            color: white;
+            padding: 3rem 0 2rem;
+            text-align: center;
+        }
+        
+        .footer-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .disclaimer {
+            background: #2d3748;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+            font-size: 0.9rem;
+            line-height: 1.6;
+            color: #cbd5e0;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            nav ul {
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 1rem;
+            }
+            
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .hero p {
+                font-size: 1.1rem;
+            }
+            
+            .products-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+            
+            .container {
+                padding: 0 15px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .hero {
+                padding: 3rem 0;
+            }
+            
+            .hero h1 {
+                font-size: 2rem;
+            }
+            
+            .products {
+                padding: 3rem 0;
+            }
+            
+            .section-title {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">GameGearGuide</div>
+                <nav>
+                    <ul>
+                        <li><a href="#home">Home</a></li>
+                        <li><a href="#products">Products</a></li>
+                        <li><a href="#reviews">Reviews</a></li>
+                        <li><a href="#guides">Guides</a></li>
+                        <li><a href="#contact">Contact</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="container">
+            <h1>GameGearGuide</h1>
+            <p>Expert reviews for pro gaming peripherals</p>
+        </div>
+    </section>
+
+    <section class="products" id="products">
+        <div class="container">
+            <h2 class="section-title">Top Gaming Gear 2024</h2>
+            
+            <div class="products-grid">
+                <div class="product-card">
+                    <h3>Logitech G Pro X Superlight</h3>
+                    <p>The ultimate wireless gaming mouse designed for esports professionals. Features HERO 25K sensor, ultra-lightweight design at just 63 grams, and up to 70 hours of battery life. Perfect for competitive gaming with zero compromises on performance.</p>
+                    <button class="cta-button" onclick="window.open(getAmazonLink('logitech+g+pro+x+superlight'), '_blank')">Check Price on Amazon</button>
+                </div>
+
+                <div class="product-card">
+                    <h3>Razer DeathAdder V3</h3>
+                    <p>Ergonomic gaming mouse with Focus Pro 30K sensor and ultra-lightweight 59g design. Features improved ergonomics, 90-hour battery life, and Razer's most advanced sensor technology. Ideal for long gaming sessions with superior comfort and precision.</p>
+                    <button class="cta-button" onclick="window.open(getAmazonLink('razer+deathadder+v3+mechanical+keyboard+review'), '_blank')">View on Amazon</button>
+                </div>
+
+                <div class="product-card">
+                    <h3>SteelSeries Apex Pro</h3>
+                    <p>Revolutionary mechanical gaming keyboard with adjustable OmniPoint switches. Customize actuation distance from 0.4mm to 3.6mm per key, featuring OLED Smart Display and premium aluminum construction. The most versatile mechanical keyboard for serious gamers.</p>
+                    <button class="cta-button" onclick="window.open(getAmazonLink('steelseries+apex+pro+wireless+gaming+headset'), '_blank')">Check Price on Amazon</button>
+                </div>
+
+                <div class="product-card">
+                    <h3>HyperX Cloud II</h3>
+                    <p>Professional gaming headset with virtual 7.1 surround sound and premium comfort. Features 53mm drivers, noise-cancelling microphone, and durable aluminum frame. Trusted by pro gamers worldwide for crystal-clear audio and all-day comfort.</p>
+                    <button class="cta-button" onclick="window.open(getAmazonLink('hyperx+cloud+ii+gaming+mouse+pad'), '_blank')">View on Amazon</button>
+                </div>
+
+                <div class="product-card">
+                    <h3>Corsair K95 RGB Platinum</h3>
+                    <p>Premium mechanical gaming keyboard with Cherry MX switches and dynamic RGB lighting. Features dedicated macro keys, aircraft-grade aluminum frame, and advanced lighting effects. The ultimate RGB gaming keyboard for enthusiasts who demand the best.</p>
+                    <button class="cta-button" onclick="window.open(getAmazonLink('corsair+k95+rgb+platinum+RGB+gaming+keyboard'), '_blank')">Check Price on Amazon</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="disclaimer">
+                    <strong>Affiliate Disclosure:</strong> GameGearGuide is a participant in the Amazon Services LLC Associates Program and other international Amazon affiliate programs, including Amazon.co.uk, Amazon.es, Amazon.it, Amazon.fr, and Amazon.de. This is an affiliate advertising program designed to provide a means for sites to earn advertising fees by advertising and linking to Amazon properties in the United States, United Kingdom, Spain, Italy, France, and Germany. We may earn a commission from qualifying purchases made through our links at no additional cost to you.
+                </div>
+                <p>&copy; 2024 GameGearGuide. All rights reserved. | Expert reviews for pro gaming peripherals</p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

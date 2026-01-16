@@ -1,0 +1,10 @@
+User-agent: *
+Allow: /
+Sitemap: https://{site_name}.pages.dev/sitemap.xml
+
+# SEO optimized robots.txt
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /

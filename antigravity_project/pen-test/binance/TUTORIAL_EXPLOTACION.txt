@@ -1,0 +1,420 @@
+╔══════════════════════════════════════════════════════════════════════════════════╗
+║                                                                                    ║
+║   🟪🟪🟪 TUTORIAL DE EXPLOTACIÓN - BSC GENESIS CONTRACTS 🟪🟪🟪                  ║
+║                                                                                    ║
+║   Target: Binance Smart Chain Bug Bounty                                          ║
+║   Bounty Range: $500 - $100,000 USD                                               ║
+║   Auditor: l0ve                                                                   ║
+║   Fecha: 2026-01-07                                                               ║
+║                                                                                    ║
+╚══════════════════════════════════════════════════════════════════════════════════╝
+
+════════════════════════════════════════════════════════════════════════════════════
+ ÍNDICE
+════════════════════════════════════════════════════════════════════════════════════
+
+1. SETUP DEL ENTORNO
+2. VULNERABILIDADES ENCONTRADAS (ORDENADAS POR PAGO POTENCIAL)
+3. EXPLOITS DESARROLLADOS
+4. CÓMO EJECUTAR LOS TESTS
+5. CÓMO REPORTAR AL BUG BOUNTY
+6. RECOMENDACIONES DE REMEDIACIÓN
+
+════════════════════════════════════════════════════════════════════════════════════
+ 1. SETUP DEL ENTORNO
+════════════════════════════════════════════════════════════════════════════════════
+
+🟪 PASO 1: Instalar Foundry (framework de testing para Solidity)
+
+    curl -L https://foundry.paradigm.xyz | bash
+    foundryup
+
+🟪 PASO 2: Clonar el repositorio (ya hecho)
+
+    cd /home/l0ve/pen-test/binance/bsc-genesis-contract
+
+🟪 PASO 3: Instalar dependencias
+
+    forge install
+
+🟪 PASO 4: Compilar contratos
+
+    forge build
+
+🟪 PASO 5: Ejecutar tests existentes
+
+    forge test -vvv
+
+🟪 PASO 6: Fork de BSC Mainnet para testing realista
+
+    # Necesitas un RPC de BSC (puedes usar Ankr, QuickNode, etc.)
+    export BSC_RPC="https://bsc-dataseed.binance.org/"
+
+    # Ejecutar tests contra fork
+    forge test --fork-url $BSC_RPC -vvv
+
+════════════════════════════════════════════════════════════════════════════════════
+ 2. VULNERABILIDADES ENCONTRADAS
+════════════════════════════════════════════════════════════════════════════════════
+
+┌────────────────────────────────────────────────────────────────────────────────┐
+│ 🔴 CRÍTICA #1: Reentrancy en StakeHub.redelegate()                             │
+│ Archivo: contracts/StakeHub.sol:553-599                                        │
+│ Bounty Estimado: $50,000 - $100,000                                            │
+├────────────────────────────────────────────────────────────────────────────────┤
+│                                                                                │
+│ EXPLICACIÓN:                                                                   │
+│ La función redelegate() hace 3 llamadas externas antes de completar           │
+│ cambios de estado:                                                             │
+│                                                                                │
+│   1. unbond() → Retorna BNB al StakeHub                                        │
+│   2. call{value: feeCharge}("") → Envía fee al creditContract destino          │
+│   3. delegate() → Delega al nuevo validador                                    │
+│                                                                                │
+│ Si el creditContract destino es malicioso, puede reentrar en el paso 2.       │
+│                                                                                │
+│ IMPACTO:                                                                       │
+│ - Robo de fondos de staking                                                    │
+│ - Manipulación de shares                                                       │
+│ - Disrupción económica de validadores                                          │
+│                                                                                │
+│ EXPLOIT: exploits/ReentrancyExploit.sol                                        │
+│                                                                                │
+│ POR QUÉ PAGA BIEN:                                                             │
+│ → Afecta directamente los fondos de usuarios                                   │
+│ → Es explotable en condiciones reales                                          │
+│ → El impacto económico es cuantificable y alto                                 │
+│                                                                                │
+└────────────────────────────────────────────────────────────────────────────────┘
+
+┌────────────────────────────────────────────────────────────────────────────────┐
+│ 🔴 CRÍTICA #2: Flash Loan Governance Attack                                    │
+│ Archivo: contracts/GovToken.sol + contracts/StakeHub.sol                       │
+│ Bounty Estimado: $75,000 - $100,000                                            │
+├────────────────────────────────────────────────────────────────────────────────┤
+│                                                                                │
+│ EXPLICACIÓN:                                                                   │
+│ El GovToken otorga poder de voto basado en BNB stakeado.                       │
+│ Vector de ataque:                                                              │
+│                                                                                │
+│   1. Flash loan de grandes cantidades de BNB                                   │
+│   2. Delegate al validador (obtener shares)                                    │
+│   3. Sync GovToken (obtener voting power)                                      │
+│   4. Votar en propuesta de governance                                          │
+│   5. Undelegate y devolver flash loan                                          │
+│                                                                                │
+│ El unbondPeriod de 7 días DEBERÍA prevenir esto, pero hay que verificar       │
+│ si existe bypass vía redelegate() u otros mecanismos.                          │
+│                                                                                │
+│ IMPACTO:                                                                       │
+│ - Aprobar propuestas maliciosas                                                │
+│ - Drenar treasury                                                              │
+│ - Modificar parámetros críticos del protocolo                                  │
+│ - Cambiar direcciones de contratos del sistema                                 │
+│                                                                                │
+│ EXPLOIT: exploits/FlashLoanGovernanceExploit.sol                               │
+│                                                                                │
+│ POR QUÉ PAGA BIEN:                                                             │
+│ → Compromete la gobernanza completa del protocolo                              │
+│ → Puede resultar en pérdida masiva de fondos                                   │
+│ → Afecta la descentralización de la red                                        │
+│                                                                                │
+└────────────────────────────────────────────────────────────────────────────────┘
+
+┌────────────────────────────────────────────────────────────────────────────────┐
+│ 🟠 ALTA #3: Unchecked Return Value en distributeReward()                       │
+│ Archivo: contracts/StakeHub.sol:656                                            │
+│ Bounty Estimado: $10,000 - $50,000                                             │
+├────────────────────────────────────────────────────────────────────────────────┤
+│                                                                                │
+│ CÓDIGO VULNERABLE:                                                             │
+│                                                                                │
+│   SYSTEM_REWARD_ADDR.call{ value: msg.value }("");  // ⚠️ Sin verificar!      │
+│                                                                                │
+│ EXPLICACIÓN:                                                                   │
+│ Si esta llamada falla, los fondos quedan atrapados en StakeHub sin            │
+│ posibilidad de recuperación. No hay error, no hay revert.                      │
+│                                                                                │
+│ ESCENARIOS DE FALLO:                                                           │
+│ - SYSTEM_REWARD_ADDR tiene receive() que revierte                              │
+│ - Congestión de red causa out-of-gas                                           │
+│ - Upgrade del contrato destino con lógica incompatible                         │
+│                                                                                │
+│ IMPACTO:                                                                       │
+│ - Pérdida permanente de recompensas de staking                                 │
+│ - Validadores pierden ingresos                                                 │
+│ - "Ghost funds" que nadie puede reclamar                                       │
+│                                                                                │
+│ EXPLOIT: exploits/UncheckedReturnExploit.sol                                   │
+│                                                                                │
+│ POR QUÉ PAGA BIEN:                                                             │
+│ → Es un error de código claro y demostrable                                    │
+│ → La solución es simple (verificar return value)                               │
+│ → Impacto potencial en producción                                              │
+│                                                                                │
+└────────────────────────────────────────────────────────────────────────────────┘
+
+┌────────────────────────────────────────────────────────────────────────────────┐
+│ 🟠 ALTA #4: Slash Reward Manipulation                                          │
+│ Archivo: contracts/SlashIndicator.sol:260                                      │
+│ Bounty Estimado: $10,000 - $25,000                                             │
+├────────────────────────────────────────────────────────────────────────────────┤
+│                                                                                │
+│ CÓDIGO VULNERABLE:                                                             │
+│                                                                                │
+│   uint256 amount = (address(SYSTEM_REWARD_ADDR).balance *                      │
+│                     felonySlashRewardRatio) / 100;                             │
+│                                                                                │
+│ EXPLICACIÓN:                                                                   │
+│ La recompensa por reportar slashing se calcula como % del balance             │
+│ de SYSTEM_REWARD_ADDR. Un atacante puede:                                      │
+│                                                                                │
+│   1. Enviar BNB a SYSTEM_REWARD_ADDR (inflar balance)                          │
+│   2. Reportar evidencia válida de slashing                                     │
+│   3. Recibir recompensa inflada (20% del balance inflado)                      │
+│                                                                                │
+│ VECTOR REAL:                                                                   │
+│ - Front-running: Detectar tx de slashing en mempool                            │
+│ - Donar justo antes de que se procese                                          │
+│ - El slasher original recibe más de lo esperado                                │
+│                                                                                │
+│ EXPLOIT: exploits/SlashRewardManipulation.sol                                  │
+│                                                                                │
+│ POR QUÉ PAGA BIEN:                                                             │
+│ → Afecta la economía del sistema de slashing                                   │
+│ → Puede drenar el pool de recompensas del sistema                              │
+│ → Demuestra falta de controles económicos                                      │
+│                                                                                │
+└────────────────────────────────────────────────────────────────────────────────┘
+
+┌────────────────────────────────────────────────────────────────────────────────┐
+│ 🟡 MEDIA #5: Token Recovery Lock Extension Attack                              │
+│ Archivo: contracts/TokenHub.sol:230-236                                        │
+│ Bounty Estimado: $5,000 - $15,000                                              │
+├────────────────────────────────────────────────────────────────────────────────┤
+│                                                                                │
+│ CÓDIGO VULNERABLE:                                                             │
+│                                                                                │
+│   function _lockRecoverToken(...) internal {                                   │
+│       lockInfo.amount = lockInfo.amount.add(amount);                           │
+│       lockInfo.unlockAt = block.timestamp + LOCK_PERIOD_FOR_TOKEN_RECOVER;     │
+│   }                                                                            │
+│                                                                                │
+│ EXPLICACIÓN:                                                                   │
+│ Cada recovery RESETEA el unlockAt. Un atacante puede:                          │
+│                                                                                │
+│   1. Esperar a que víctima inicie recovery                                     │
+│   2. Antes de 7 días, iniciar otra recovery para la víctima                    │
+│   3. Esto resetea el timer de 7 días                                           │
+│   4. Repetir indefinidamente = fondos bloqueados para siempre                  │
+│                                                                                │
+│ IMPACTO:                                                                       │
+│ - DoS permanente en token recovery                                             │
+│ - Víctimas no pueden acceder a sus fondos migrados                             │
+│ - Ataque de griefing con costo mínimo                                          │
+│                                                                                │
+│ EXPLOIT: exploits/TokenRecoveryTimingAttack.sol                                │
+│                                                                                │
+│ POR QUÉ PAGA:                                                                  │
+│ → Afecta usuarios reales del sistema de migración                              │
+│ → Es un DoS que no requiere grandes recursos                                   │
+│ → Impacta la usabilidad del protocolo                                          │
+│                                                                                │
+└────────────────────────────────────────────────────────────────────────────────┘
+
+════════════════════════════════════════════════════════════════════════════════════
+ 3. CÓMO EJECUTAR LOS EXPLOITS
+════════════════════════════════════════════════════════════════════════════════════
+
+🟪 PASO 1: Copiar exploits al directorio de tests
+
+    cp /home/l0ve/pen-test/binance/exploits/*.sol \
+       /home/l0ve/pen-test/binance/bsc-genesis-contract/test/
+
+🟪 PASO 2: Crear test file para Foundry
+
+    # Crear archivo de test
+    cat > /home/l0ve/pen-test/binance/bsc-genesis-contract/test/Exploits.t.sol << 'EOF'
+    // SPDX-License-Identifier: MIT
+    pragma solidity 0.8.17;
+
+    import "forge-std/Test.sol";
+    import "./ReentrancyExploit.sol";
+    import "./FlashLoanGovernanceExploit.sol";
+
+    contract ExploitTest is Test {
+        // Tests go here
+    }
+    EOF
+
+🟪 PASO 3: Ejecutar tests contra fork de BSC
+
+    cd /home/l0ve/pen-test/binance/bsc-genesis-contract
+
+    # Fork de mainnet BSC
+    forge test --fork-url https://bsc-dataseed.binance.org/ -vvvv
+
+🟪 PASO 4: Generar reporte de gas
+
+    forge test --gas-report
+
+════════════════════════════════════════════════════════════════════════════════════
+ 4. CÓMO REPORTAR AL BUG BOUNTY
+════════════════════════════════════════════════════════════════════════════════════
+
+🟪 OPCIÓN A: Binance Bugcrowd (Para web/API vulnerabilities)
+
+    URL: https://bugcrowd.com/binance
+
+    1. Crear cuenta en Bugcrowd
+    2. Ir al programa de Binance
+    3. Leer scope completo
+    4. Crear reporte con:
+       - Título descriptivo
+       - Descripción técnica
+       - Pasos de reproducción
+       - Proof of Concept (código)
+       - Impacto estimado
+       - Sugerencia de fix
+
+🟪 OPCIÓN B: BNB Chain Bug Bounty (Para smart contracts)
+
+    URL: https://bugbounty.bnbchain.org/
+
+    1. Preparar reporte técnico
+    2. Incluir PoC funcional
+    3. Demostrar impacto con números
+    4. Proponer remediación
+
+🟪 TEMPLATE DE REPORTE:
+
+    ═══════════════════════════════════════════════════
+    TÍTULO: [Severity] - Descripción corta
+    ═══════════════════════════════════════════════════
+
+    ## Resumen
+    Breve descripción de 2-3 líneas
+
+    ## Componente Afectado
+    - Contrato: StakeHub.sol
+    - Función: redelegate()
+    - Líneas: 553-599
+
+    ## Descripción Técnica
+    Explicación detallada del bug...
+
+    ## Pasos de Reproducción
+    1. Deploy MaliciousCreditContract
+    2. Llamar startAttack() con 10 BNB
+    3. Llamar executeRedelegate()
+    4. Observar eventos de reentrancy
+
+    ## Proof of Concept
+    ```solidity
+    // Código del exploit
+    ```
+
+    ## Impacto
+    - Severidad: Crítica
+    - Fondos en riesgo: $X millones
+    - Usuarios afectados: Todos los stakers
+
+    ## Remediación Sugerida
+    ```solidity
+    // Código con el fix
+    ```
+    ═══════════════════════════════════════════════════
+
+════════════════════════════════════════════════════════════════════════════════════
+ 5. REMEDIACIONES SUGERIDAS
+════════════════════════════════════════════════════════════════════════════════════
+
+🟪 FIX #1: Reentrancy en redelegate()
+
+    // ANTES (vulnerable):
+    uint256 bnbAmount = IStakeCredit(srcValInfo.creditContract).unbond(delegator, shares);
+    (bool success,) = dstValInfo.creditContract.call{ value: feeCharge }("");
+
+    // DESPUÉS (seguro):
+    // Agregar ReentrancyGuard
+    function redelegate(...) external nonReentrant { ... }
+
+    // O usar checks-effects-interactions:
+    // 1. Hacer todos los checks
+    // 2. Actualizar todo el estado
+    // 3. Hacer llamadas externas al final
+
+🟪 FIX #2: Unchecked return value
+
+    // ANTES (vulnerable):
+    SYSTEM_REWARD_ADDR.call{ value: msg.value }("");
+
+    // DESPUÉS (seguro):
+    (bool success,) = SYSTEM_REWARD_ADDR.call{ value: msg.value }("");
+    require(success, "Transfer to SYSTEM_REWARD failed");
+
+🟪 FIX #3: Token recovery lock extension
+
+    // ANTES (vulnerable):
+    lockInfo.unlockAt = block.timestamp + LOCK_PERIOD_FOR_TOKEN_RECOVER;
+
+    // DESPUÉS (seguro):
+    // Solo extender si el nuevo unlock es mayor
+    uint256 newUnlock = block.timestamp + LOCK_PERIOD_FOR_TOKEN_RECOVER;
+    if (newUnlock > lockInfo.unlockAt) {
+        lockInfo.unlockAt = newUnlock;
+    }
+    // O mejor: no permitir múltiples recoveries al mismo recipient
+
+🟪 FIX #4: Slash reward manipulation
+
+    // ANTES (vulnerable):
+    uint256 amount = (address(SYSTEM_REWARD_ADDR).balance * ratio) / 100;
+
+    // DESPUÉS (seguro):
+    // Usar un valor fijo o snapshot del balance
+    uint256 maxReward = 100 ether; // Cap fijo
+    uint256 amount = (address(SYSTEM_REWARD_ADDR).balance * ratio) / 100;
+    if (amount > maxReward) amount = maxReward;
+
+════════════════════════════════════════════════════════════════════════════════════
+ 6. COMANDOS ÚTILES
+════════════════════════════════════════════════════════════════════════════════════
+
+# Ver estructura de contratos
+find /home/l0ve/pen-test/binance/bsc-genesis-contract/contracts -name "*.sol" | xargs wc -l
+
+# Buscar patrones vulnerables
+grep -rn "\.call{" /home/l0ve/pen-test/binance/bsc-genesis-contract/contracts/
+grep -rn "transfer(" /home/l0ve/pen-test/binance/bsc-genesis-contract/contracts/
+grep -rn "delegatecall" /home/l0ve/pen-test/binance/bsc-genesis-contract/contracts/
+
+# Compilar con warnings
+forge build --force 2>&1 | grep -i "warning"
+
+# Ejecutar slither (análisis estático)
+pip install slither-analyzer
+slither /home/l0ve/pen-test/binance/bsc-genesis-contract/
+
+# Ejecutar mythril (análisis simbólico)
+pip install mythril
+myth analyze /home/l0ve/pen-test/binance/bsc-genesis-contract/contracts/StakeHub.sol
+
+════════════════════════════════════════════════════════════════════════════════════
+ DISCLAIMER
+════════════════════════════════════════════════════════════════════════════════════
+
+Este tutorial es SOLO para propósitos educativos y de investigación de seguridad
+autorizada dentro del programa de bug bounty de Binance.
+
+❌ NO usar estos exploits en producción sin autorización
+❌ NO atacar sistemas sin permiso
+❌ NO causar daño a usuarios reales
+
+✅ SÍ reportar vulnerabilidades responsablemente
+✅ SÍ usar solo en testnets o forks locales
+✅ SÍ seguir las reglas del programa de bug bounty
+
+════════════════════════════════════════════════════════════════════════════════════
+                          🟪 Happy Hunting! 🟪
+════════════════════════════════════════════════════════════════════════════════════

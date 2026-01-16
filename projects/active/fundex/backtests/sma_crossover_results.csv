@@ -1,0 +1,24 @@
+Start,End,Duration,Exposure Time [%],Equity Final [$],Equity Peak [$],Commissions [$],Return [%],Buy & Hold Return [%],Return (Ann.) [%],Volatility (Ann.) [%],CAGR [%],Sharpe Ratio,Sortino Ratio,Calmar Ratio,Alpha [%],Beta,Max. Drawdown [%],Avg. Drawdown [%],Max. Drawdown Duration,Avg. Drawdown Duration,# Trades,Win Rate [%],Best Trade [%],Worst Trade [%],Avg. Trade [%],Max. Trade Duration,Avg. Trade Duration,Profit Factor,Expectancy [%],SQN,Kelly Criterion,_strategy,_equity_curve,_trades
+2025-01-10,2026-01-10,365 days,38.79781420765027,146814.5706142578,219572.73076708982,1751.7146367187502,46.8145706142578,17.64732397292323,46.66061635972068,70.9037255923959,46.8145706142578,0.6580841270310458,1.83257793601559,1.3843967281494571,40.03891762273873,0.3839479006514045,-33.70465662837313,-9.484535810783845,141 days,25 days,6,33.33333333333333,69.09828692659458,-14.628686886110446,7.617626932919208,60 days,23 days,2.7289478653939874,11.593366333641326,0.5384599911506481,0.15226896581607222,SMACrossover,"                   Equity  DrawdownPct DrawdownDuration
+Date                                                   
+2025-01-10  100000.000000     0.000000              NaT
+2025-01-11  100000.000000     0.000000              NaT
+2025-01-12  100000.000000     0.000000              NaT
+2025-01-13  100000.000000     0.000000              NaT
+2025-01-14  100000.000000     0.000000              NaT
+...                   ...          ...              ...
+2026-01-06  155575.254208     0.291464              NaT
+2026-01-07  149894.731747     0.317334              NaT
+2026-01-08  147146.429013     0.329851              NaT
+2026-01-09  146207.669247     0.334126              NaT
+2026-01-10  146814.570614     0.331362         141 days
+
+[366 rows x 3 columns]","   Size  EntryBar  ExitBar  ...   Tag   Entry_λ(C)    Exit_λ(C)
+0    52       108      149  ...  None  1687.818213  2556.408553
+1    46       152      162  ...  None  2579.058748  2562.375562
+2    44       179      239  ...  None  2516.361393  4413.290560
+3    41       249      258  ...  None  4438.850854  4394.623128
+4    38       271      276  ...  None  4390.153263  4319.147021
+5    48       334      345  ...  None  3058.417179  3020.085840
+
+[6 rows x 16 columns]"

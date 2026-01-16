@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Antigravity | Command Center</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Inter:wght@300;400;600&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --primary: #bc13fe;
+            --secondary: #00d2ff;
+            --bg: #0a0b10;
+            --card-bg: rgba(255, 255, 255, 0.05);
+            --neon-glow: 0 0 10px var(--primary), 0 0 20px var(--primary);
+            --neon-glow-blue: 0 0 10px var(--secondary), 0 0 20px var(--secondary);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: #fff;
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+            background-image:
+                radial-gradient(circle at 20% 30%, rgba(188, 19, 254, 0.1) 0%, transparent 40%),
+                radial-gradient(circle at 80% 70%, rgba(0, 210, 255, 0.1) 0%, transparent 40%);
+        }
+
+        .grid-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image:
+                linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+            background-size: 50px 50px;
+            z-index: -1;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 60px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 20px;
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .logo-text {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2rem;
+            letter-spacing: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: var(--neon-glow);
+        }
+
+        .status-badge {
+            padding: 6px 15px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            background: rgba(0, 255, 133, 0.1);
+            color: #00ff85;
+            border: 1px solid #00ff85;
+            box-shadow: 0 0 10px rgba(0, 255, 133, 0.2);
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 30px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 30px;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: conic-gradient(transparent, var(--primary), transparent, var(--secondary), transparent);
+            animation: rotate 6s linear infinite;
+            opacity: 0;
+            transition: opacity 0.4s;
+            z-index: -1;
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+            border-color: rgba(188, 19, 254, 0.5);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .card:hover::before {
+            opacity: 0.1;
+        }
+
+        @keyframes rotate {
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .card h3 {
+            font-family: 'Orbitron', sans-serif;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card .icon {
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+
+        .card p {
+            color: rgba(255, 255, 255, 0.6);
+            line-height: 1.6;
+            margin-bottom: 20px;
+            font-size: 0.95rem;
+        }
+
+        .tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .tag {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 4px 12px;
+            border-radius: 5px;
+            font-size: 0.75rem;
+            color: var(--secondary);
+            border: 1px solid rgba(0, 210, 255, 0.3);
+        }
+
+        .terminal {
+            grid-column: 1 / -1;
+            background: #000;
+            border-radius: 15px;
+            padding: 20px;
+            font-family: 'Consolas', monospace;
+            border: 1px solid var(--primary);
+            box-shadow: 0 0 20px rgba(188, 19, 254, 0.1);
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .terminal-header {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 15px;
+            border-bottom: 1px solid #333;
+            padding-bottom: 10px;
+        }
+
+        .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .red {
+            background: #ff5f56;
+        }
+
+        .yellow {
+            background: #ffbd2e;
+        }
+
+        .green {
+            background: #27c93f;
+        }
+
+        .terminal-content p {
+            margin-bottom: 8px;
+            font-size: 0.85rem;
+        }
+
+        .prompt {
+            color: var(--secondary);
+            margin-right: 10px;
+        }
+
+        .cmd {
+            color: #fff;
+        }
+
+        .output {
+            color: #888;
+            margin-left: 20px;
+        }
+
+        .sidebar {
+            background: rgba(255, 255, 255, 0.02);
+            border-left: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 0 20px 20px 0;
+        }
+
+        .stat-item {
+            margin-bottom: 25px;
+        }
+
+        .stat-label {
+            font-size: 0.7rem;
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 5px;
+        }
+
+        .stat-value {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.2rem;
+            color: var(--secondary);
+        }
+
+        .btn-action {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            margin-top: 15px;
+            background: transparent;
+            border: 1px solid var(--primary);
+            color: var(--primary);
+            border-radius: 10px;
+            cursor: pointer;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.8rem;
+            transition: all 0.3s;
+            text-align: center;
+            text-decoration: none;
+        }
+
+        .btn-action:hover {
+            background: var(--primary);
+            color: #fff;
+            box-shadow: var(--neon-glow);
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .dashboard-grid>div {
+            animation: fadeIn 0.8s ease forwards;
+        }
+
+        .dashboard-grid>div:nth-child(1) {
+            animation-delay: 0.1s;
+        }
+
+        .dashboard-grid>div:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .dashboard-grid>div:nth-child(3) {
+            animation-delay: 0.3s;
+        }
+
+        .dashboard-grid>div:nth-child(4) {
+            animation-delay: 0.4s;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="grid-bg"></div>
+
+    <div class="container">
+        <header>
+            <div class="logo-area">
+                <div class="logo-text">ANTIGRAVITY</div>
+                <div class="status-badge">System Online</div>
+            </div>
+            <div style="text-align: right;">
+                <p style="font-size: 0.8rem; color: #888;">CURRENT_COORD: 192.168.1.17</p>
+                <p style="font-size: 0.8rem; color: #888;">LAST_SYNC: 2026-01-15 23:44</p>
+            </div>
+        </header>
+
+        <div class="dashboard-grid">
+            <!-- Security Hub -->
+            <div class="card">
+                <h3><span class="icon">🛡️</span> Security Hub</h3>
+                <p>Análisis de vulnerabilidades en BSC Genesis Contracts. Reportes de Bug Bounty activos.</p>
+                <div class="tags">
+                    <span class="tag">Solidity</span>
+                    <span class="tag">BSC</span>
+                    <span class="tag">Bug Bounty</span>
+                </div>
+                <div style="margin-top: 20px; font-size: 0.8rem; color: #ff5f56;">
+                    ⚠️ Alerta: M-03 Token Recovery Lock Lock compatible.
+                </div>
+                <a href="#" class="btn-action">Ver Reportes</a>
+            </div>
+
+            <!-- Inmigra Legal -->
+            <div class="card">
+                <h3><span class="icon">⚖️</span> Asistente Legal</h3>
+                <p>Sistema RAG + FastAPI para procesamiento de documentos de extranjería. Integrado con Vertex AI.</p>
+                <div class="tags">
+                    <span class="tag">FastAPI</span>
+                    <span class="tag">Next.js</span>
+                    <span class="tag">Vertex AI</span>
+                </div>
+                <a href="#" class="btn-action">Lanzar Backend</a>
+            </div>
+
+            <!-- Fundex -->
+            <div class="card">
+                <h3><span class="icon">💹</span> Fundex Trading</h3>
+                <p>Plataforma de trading algorítmico y backtesting de alta frecuencia.</p>
+                <div class="tags">
+                    <span class="tag">Python</span>
+                    <span class="tag">Backtrader</span>
+                    <span class="tag">HFT</span>
+                </div>
+                <a href="#" class="btn-action">Ejecutar Backtest</a>
+            </div>
+
+            <!-- Mobile Farms -->
+            <div class="card">
+                <h3><span class="icon">📱</span> Hardware Farms</h3>
+                <p>Ingeniería inversa de dispositivos antiguos para redes descentralizadas.</p>
+                <div class="tags">
+                    <span class="tag">IoT</span>
+                    <span class="tag">Reverse Eng</span>
+                    <span class="tag">C++</span>
+                </div>
+                <a href="#" class="btn-action">Monitor de Nodos</a>
+            </div>
+
+            <!-- Migration Terminal -->
+            <div class="terminal">
+                <div class="terminal-header">
+                    <div class="dot red"></div>
+                    <div class="dot yellow"></div>
+                    <div class="dot green"></div>
+                    <span style="font-size: 0.7rem; color: #555; margin-left: 10px;">migration_log.sh</span>
+                </div>
+                <div class="terminal-content">
+                    <p><span class="prompt">$</span><span class="cmd">tar -zxvf
+                            C:\Users\patri\Downloads\antigravity_full_20260110.tar.gz</span></p>
+                    <p class="output">Extracting: pen-test/binance/bsc-genesis-contract/...</p>
+                    <p class="output">Extracting: inmigra-legal/backend/app/main.py...</p>
+                    <p class="output">Extracting: fundex/strategies/bollinger_v2.py...</p>
+                    <p><span class="prompt">$</span><span class="cmd">ls -R ./antigravity_project | wc -l</span></p>
+                    <p class="output">Processed 14,302 files successfully.</p>
+                    <p><span class="prompt">$</span><span class="cmd">status --check system</span></p>
+                    <p class="output" style="color: #00ff85;">[SUCCESS] Context migration completed.</p>
+                    <p><span class="prompt">$</span><span class="cmd">_</span></p>
+                </div>
+            </div>
+        </div>
+
+        <div style="margin-top: 40px; display: grid; grid-template-columns: 1fr 300px; gap: 30px;">
+            <div class="card" style="margin-top: 0;">
+                <h3><span class="icon">🧬</span> VMware Integration</h3>
+                <p>Control directo de la instancia Kali Linux. Acceso a herramientas de auditoría remota.</p>
+                <div style="background: rgba(0,0,0,0.3); padding: 15px; border-radius: 10px; margin-top: 10px;">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                        <span>VM_ID: KALIdoso</span>
+                        <span style="color: #00ff85;">RUNNING</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                        <span>IP: 192.168.1.17</span>
+                        <span>SSH: 22 (Open)</span>
+                    </div>
+                </div>
+                <a href="#" class="btn-action" style="margin-top: 20px;">Abrir Consola SSH</a>
+            </div>
+
+            <div class="sidebar card" style="margin-top: 0;">
+                <div class="stat-item">
+                    <div class="stat-label">Proyectos Activos</div>
+                    <div class="stat-value">04</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">Vulnerabilidades</div>
+                    <div class="stat-value" style="color: #ff5f56;">07 Found</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">Créditos GCP</div>
+                    <div class="stat-value">$1,300.00</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">Storage Used</div>
+                    <div class="stat-value">512 MB</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast"
+        style="position: fixed; bottom: 30px; right: 30px; background: rgba(0,0,0,0.9); border: 1px solid var(--primary); padding: 15px 25px; border-radius: 10px; display: none; z-index: 1000; max-width: 400px;">
+        <span id="toast-msg"></span>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:3001/api';
+
+        // Toast notification
+        function showToast(msg, isError = false) {
+            const toast = document.getElementById('toast');
+            const toastMsg = document.getElementById('toast-msg');
+            toast.style.borderColor = isError ? '#ff5f56' : '#00ff85';
+            toastMsg.style.color = isError ? '#ff5f56' : '#00ff85';
+            toastMsg.textContent = msg;
+            toast.style.display = 'block';
+            setTimeout(() => { toast.style.display = 'none'; }, 4000);
+        }
+
+        // API call helper
+        async function apiCall(endpoint, method = 'POST') {
+            try {
+                const res = await fetch(`${API_BASE}${endpoint}`, { method });
+                const data = await res.json();
+                showToast(data.message || data.error, !data.success);
+                return data;
+            } catch (e) {
+                showToast('❌ Servidor no disponible. Ejecuta: node command_center_server.js', true);
+            }
+        }
+
+        // Log to terminal
+        function logToTerminal(cmd, output, isSuccess = true) {
+            const termContent = document.querySelector('.terminal-content');
+            const color = isSuccess ? '#00ff85' : '#ff5f56';
+            termContent.innerHTML += `<p><span class="prompt">$</span><span class="cmd">${cmd}</span></p>`;
+            termContent.innerHTML += `<p class="output" style="color: ${color}">${output}</p>`;
+            termContent.scrollTop = termContent.scrollHeight;
+        }
+
+        // Button handlers
+        document.addEventListener('DOMContentLoaded', () => {
+            // Get all action buttons
+            const buttons = document.querySelectorAll('.btn-action');
+
+            buttons.forEach(btn => {
+                btn.addEventListener('click', async (e) => {
+                    e.preventDefault();
+                    const text = btn.textContent.trim();
+
+                    switch (text) {
+                        case 'Ver Reportes':
+                            logToTerminal('explorer binance/', 'Opening Binance reports folder...');
+                            await apiCall('/security/reports');
+                            break;
+
+                        case 'Lanzar Backend':
+                            logToTerminal('uvicorn main:app --reload', 'Starting Inmigra-Legal backend...');
+                            await apiCall('/inmigra/start');
+                            break;
+
+                        case 'Ejecutar Backtest':
+                            logToTerminal('python paper_trading.py', 'Starting Fundex paper trading...');
+                            const result = await apiCall('/fundex/backtest');
+                            if (result?.success) {
+                                btn.textContent = 'Detener Trading';
+                                btn.style.borderColor = '#ff5f56';
+                                btn.style.color = '#ff5f56';
+                            }
+                            break;
+
+                        case 'Detener Trading':
+                            await apiCall('/fundex/stop');
+                            btn.textContent = 'Ejecutar Backtest';
+                            btn.style.borderColor = '';
+                            btn.style.color = '';
+                            logToTerminal('kill fundex', '[STOPPED] Fundex process terminated', false);
+                            break;
+
+                        case 'Monitor de Nodos':
+                            showToast('🚧 Hardware Farms en desarrollo', true);
+                            logToTerminal('monitor --nodes', '[PENDING] Module not implemented yet', false);
+                            break;
+
+                        case 'Abrir Consola SSH':
+                            logToTerminal('ssh l0ve@192.168.192.128', 'Opening SSH terminal...');
+                            await apiCall('/vm/ssh');
+                            break;
+                    }
+                });
+            });
+
+            // Update stats on load
+            fetch(`${API_BASE}/stats`)
+                .then(res => res.json())
+                .then(data => {
+                    // Could update stat values dynamically here
+                    console.log('Stats loaded:', data);
+                })
+                .catch(() => {
+                    console.log('Server offline - stats not loaded');
+                });
+        });
+
+        // Micro-interactions for cards
+        document.querySelectorAll('.card').forEach(card => {
+            card.addEventListener('mousemove', e => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+
+                card.style.setProperty('--mouse-x', `${x}px`);
+                card.style.setProperty('--mouse-y', `${y}px`);
+
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+                const rotateX = (y - centerY) / 20;
+                const rotateY = (centerX - x) / 20;
+
+                card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-10px)`;
+            });
+
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) translateY(0)`;
+            });
+        });
+
+        // Terminal cursor blink
+        setInterval(() => {
+            const cursor = document.querySelector('.terminal-content .cmd:last-child');
+            if (cursor) cursor.style.opacity = cursor.style.opacity === '0' ? '1' : '0';
+        }, 500);
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,4 @@
+session,avg_return,volatility,recommendation
+Asia,0.0291,0.3509,SKIP
+London,-0.0453,0.4046,SKIP
+New York,-0.035,0.591,TRADE

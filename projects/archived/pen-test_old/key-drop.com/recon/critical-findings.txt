@@ -1,0 +1,45 @@
+# Critical Findings - key-drop.com
+# Collected: 2026-01-07
+
+## NEW DISCOVERY: Dual WAF Protection
+
+### Primary WAF: Cloudflare
+- Standard Cloudflare protection
+- Bot management via __cf_bm cookie
+
+### Secondary WAF: "Zero WAF"  [IMPORTANT]
+- Custom header: zero: zero-waf
+- Request ID: zero-id: 013db76999dffffba652683ba8cbb836-d56d6
+- This is an additional layer of protection beyond Cloudflare
+- Likely custom application firewall
+
+## Open Ports
+
+| Port | Service | Notes |
+|------|---------|-------|
+| 80   | HTTP    | Redirects to HTTPS |
+| 443  | HTTPS   | Main web application |
+| 8080 | HTTP    | Redirects to HTTPS (alternate port) |
+| 8443 | HTTPS   | Returns text/plain (15 bytes) - Potential API/Internal |
+
+## Port 8443 Analysis [INTERESTING]
+- Different response type: text/plain vs text/html
+- Only 15 bytes content - likely "error" or "unauthorized"
+- X-Frame-Options: SAMEORIGIN (only on 8443, not main site!)
+- Could be internal service exposed
+- Worth investigating further
+
+## Technology Confirmation
+- jQuery 3.6.1
+- Cloudflare CDN/WAF
+- Zero WAF (secondary)
+- HSTS enabled (180 days)
+- X-XSS-Protection: 1; mode=block
+
+## Potential Attack Vectors
+
+1. **Bypass Zero WAF** - Less documented than Cloudflare, might have gaps
+2. **Port 8443** - Non-standard service, could have different protections
+3. **WebSocket (ws.key-drop.com)** - Real-time comms often less protected
+4. **IDOR on user profiles** - /user/profile/* blocked in robots.txt
+5. **Missing CSP** - XSS potential if injection point found

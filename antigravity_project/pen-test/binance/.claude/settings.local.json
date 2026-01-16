@@ -1,0 +1,19 @@
+{
+  "permissions": {
+    "allow": [
+      "WebSearch",
+      "Bash(forge:*)",
+      "Bash(curl:*)",
+      "Bash(bash)",
+      "Bash(source /home/l0ve/.zshenv)",
+      "Bash(foundryup)",
+      "Bash(npm install:*)",
+      "WebFetch(domain:bscscan.com)",
+      "Bash(cast code:*)",
+      "Bash(cast call:*)",
+      "WebFetch(domain:bugbounty.bnbchain.org)",
+      "Bash(cast balance:*)"
+    ]
+  },
+  "outputStyle": "Explanatory"
+}

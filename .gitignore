@@ -1,0 +1,53 @@
+# Antigravity Workspace - Git Ignore
+
+# Dependencies
+node_modules/
+venv/
+.venv/
+__pycache__/
+*.pyc
+
+# Keys and secrets (NEVER commit)
+*.pem
+*.key
+service-account.json
+.env
+
+# Build outputs
+dist/
+build/
+out/
+*.egg-info/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Large files
+*.tar
+*.gz
+*.zip
+*.iso
+
+# Logs
+*.log
+logs/
+
+# Test/coverage
+.coverage
+htmlcov/
+.pytest_cache/
+
+# Specific to this project
+pipeline/keys/
+*.bak
+
+# Capacitor
+android/
+ios/

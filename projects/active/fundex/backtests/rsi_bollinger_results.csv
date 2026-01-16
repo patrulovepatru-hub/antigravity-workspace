@@ -1,0 +1,4 @@
+symbol,strategy,return,max_dd,sharpe,trades,win_rate
+ETH-USD,RSI+BB,-42.42,-45.36,-1.54,2,0.0
+BNB-USD,RSI+BB,6.83,-22.62,0.21,3,33.33
+SOL-USD,RSI+BB,-22.54,-45.03,-0.46,3,33.33

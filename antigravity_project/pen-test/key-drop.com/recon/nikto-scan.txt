@@ -1,0 +1,39 @@
+- Nikto v2.5.0
+---------------------------------------------------------------------------
++ Multiple IPs found: 104.18.8.108, 104.18.9.108, 2606:4700::6812:96c, 2606:4700::6812:86c
++ Target IP:          104.18.8.108
++ Target Hostname:    key-drop.com
++ Target Port:        443
+---------------------------------------------------------------------------
++ SSL Info:        Subject:  /CN=key-drop.com
+                   Ciphers:  TLS_AES_256_GCM_SHA384
+                   Issuer:   /C=US/O=Google Trust Services/CN=WE1
++ Start Time:         2026-01-07 17:24:51 (GMT-5)
+---------------------------------------------------------------------------
++ Server: cloudflare
++ /: IP address found in the 'set-cookie' header. The IP is "1.0.1.1". See: https://portswigger.net/kb/issues/00600300_private-ip-addresses-disclosed
++ /: The anti-clickjacking X-Frame-Options header is not present. See: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Frame-Options
++ /: Uncommon header 'zero-id' found, with contents: 3bdb9b30519f292e95662f16d00b69b4-d56d6.
++ /: Uncommon header 'zero' found, with contents: zero-waf.
++ /: An alt-svc header was found which is advertising HTTP/3. The endpoint is: ':443'. Nikto cannot test HTTP/3 over QUIC. See: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/alt-svc
++ /:  IP address found in the '__cf_bm' cookie. The IP is "1.0.1.1".
++ /cgi-local/: IP address found in the 'report-to' header. The IP is "1.0.1.1". See: https://portswigger.net/kb/issues/00600300_private-ip-addresses-disclosed
++ /cgi-local/: IP address found in the 'content-security-policy-report-only' header. The IP is "1.0.1.1". See: https://portswigger.net/kb/issues/00600300_private-ip-addresses-disclosed
++ All CGI directories 'found', use '-C none' to test none
++ /clientaccesspolicy.xml: Cookie key-lang created without the secure flag. See: https://developer.mozilla.org/en-US/docs/Web/HTTP/Cookies
++ /clientaccesspolicy.xml: Cookie key-lang created without the httponly flag. See: https://developer.mozilla.org/en-US/docs/Web/HTTP/Cookies
++ */case-battle/*/: The X-Content-Type-Options header is not set. This could allow the user agent to render the content of the site in a different fashion to the MIME type. See: https://www.netsparker.com/web-vulnerability-scanner/vulnerabilities/missing-content-type-header/
++ /robots.txt: contains 24 entries which should be manually viewed. See: https://developer.mozilla.org/en-US/docs/Glossary/Robots.txt
++ /: The Content-Encoding header is set to "deflate" which may mean that the server is vulnerable to the BREACH attack. See: http://breachattack.com/
++ /favicon.png: Uncommon header 'cf-polished' found, with contents: origSize=4579.
++ /favicon.png: Uncommon header 'cf-bgj' found, with contents: imgq:100,h2pri.
++ /admin.nsf: Uncommon header 'server-timing' found, with contents: chlray;desc="9ba6de8b0d369bd2".
++ /admin.nsf: Uncommon header 'critical-ch' found, with contents: Sec-CH-UA-Bitness, Sec-CH-UA-Arch, Sec-CH-UA-Full-Version, Sec-CH-UA-Mobile, Sec-CH-UA-Model, Sec-CH-UA-Platform-Version, Sec-CH-UA-Full-Version-List, Sec-CH-UA-Platform, Sec-CH-UA, UA-Bitness, UA-Arch, UA-Full-Version, UA-Mobile, UA-Model, UA-Platform-Version, UA-Platform, UA.
++ /admin.nsf: Uncommon header 'cf-mitigated' found, with contents: challenge.
++ /admin.nsf: Uncommon header 'origin-agent-cluster' found, with contents: ?1.
++ /admin.nsf: Uncommon header 'cross-origin-embedder-policy' found, with contents: require-corp.
++ /admin.nsf: Uncommon header 'accept-ch' found, with contents: Sec-CH-UA-Bitness, Sec-CH-UA-Arch, Sec-CH-UA-Full-Version, Sec-CH-UA-Mobile, Sec-CH-UA-Model, Sec-CH-UA-Platform-Version, Sec-CH-UA-Full-Version-List, Sec-CH-UA-Platform, Sec-CH-UA, UA-Bitness, UA-Arch, UA-Full-Version, UA-Mobile, UA-Model, UA-Platform-Version, UA-Platform, UA.
++ Scan terminated: 20 error(s) and 21 item(s) reported on remote host
++ End Time:           2026-01-07 17:25:15 (GMT-5) (24 seconds)
+---------------------------------------------------------------------------
++ 1 host(s) tested

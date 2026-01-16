@@ -1,0 +1,20 @@
+# DNS Information - key-drop.com
+# Collected: 2026-01-07
+
+## IPv4 Addresses
+104.18.8.108
+104.18.9.108
+
+## IPv6 Addresses
+2606:4700::6812:86c
+2606:4700::6812:96c
+
+## Mail Servers
+10 mail.protonmail.ch
+20 mailsec.protonmail.ch
+
+## Notes
+- IPs belong to Cloudflare (CDN/WAF)
+- Email handled by ProtonMail (privacy-focused)
+- HTTP bindings include h3 (HTTP/3), h2 (HTTP/2) support
+- ECH (Encrypted Client Hello) enabled

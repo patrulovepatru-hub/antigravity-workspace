@@ -1,0 +1,234 @@
+[
+  {
+    "name": "__cf_bm",
+    "value": "B9uZeqJSvv.3RlKOWYnP6b3h35vR3p6oaRGwjZRHqoM-1767826820-1.0.1.1-ZF9kSBnH.HI.UbZrs8p5lO4Djs.7qWIx6DcqnguvPAv.m2IDJMI_W4oxwzjWcaPKjeUfc9e4pBmLFfx_EB9g9S8H5jowtOu1N0_NhStG8Ts",
+    "domain": ".key-drop.com",
+    "path": "/",
+    "expires": 1767828620.824978,
+    "httpOnly": true,
+    "secure": true,
+    "sameSite": "None"
+  },
+  {
+    "name": "__zeroShield",
+    "value": "8d9c3b21c73e080f250a932e8f6d84b8",
+    "domain": "key-drop.com",
+    "path": "/",
+    "expires": 1767913221.301848,
+    "httpOnly": true,
+    "secure": false,
+    "sameSite": "Lax"
+  },
+  {
+    "name": "cf_clearance",
+    "value": "6KoNGsbe7nAfFrqbaocJpLEwEQeL3aD3zpPYYpKJUKQ-1767826821-1.2.1.1-YiaM0y2.Z1DC.q5vYS1fwrJizZmalCEEV7qzjy2OdCSyC2DXTTYoaF.O4nwusQT.kXf7..AMpORQqcECJkAwM4UB8eO3u5fc_gZeprMR00_20BfYoJaE_fQjOB8LEe4DFiVzzj_Z0dyMaZz6_ffUNlGf0HTjnzOZrMBiVblolxXN6kQv80BvGew0EprlMdV4Y2HyY_L6LL4YLD8ap3BIs.FXYersq1Tj9Ux6Z.sHsnI",
+    "domain": ".key-drop.com",
+    "path": "/",
+    "expires": 1799362821.382787,
+    "httpOnly": true,
+    "secure": true,
+    "sameSite": "None",
+    "partitionKey": "https://key-drop.com",
+    "_crHasCrossSiteAncestor": false
+  },
+  {
+    "name": "key-lang",
+    "value": "EN",
+    "domain": "key-drop.com",
+    "path": "/",
+    "expires": 1770418823.133142,
+    "httpOnly": false,
+    "secure": false,
+    "sameSite": "Lax"
+  },
+  {
+    "name": "session_id",
+    "value": "8da177imn8n0h5eo1vmbvup72umd1hak",
+    "domain": "key-drop.com",
+    "path": "/",
+    "expires": 1775602821.651641,
+    "httpOnly": true,
+    "secure": false,
+    "sameSite": "Lax"
+  },
+  {
+    "name": "_ga_MF8E1V82S9",
+    "value": "GS2.1.s1767826822$o1$g0$t1767826822$j60$l0$h0",
+    "domain": ".key-drop.com",
+    "path": "/",
+    "expires": 1802386822.007571,
+    "httpOnly": false,
+    "secure": false,
+    "sameSite": "Lax"
+  },
+  {
+    "name": "_ga",
+    "value": "GA1.1.2079955910.1767826822",
+    "domain": ".key-drop.com",
+    "path": "/",
+    "expires": 1802386822.007802,
+    "httpOnly": false,
+    "secure": false,
+    "sameSite": "Lax"
+  },
+  {
+    "name": "CLID",
+    "value": "beae405a7a2e4708acc103accc7fea31.20260107.20270107",
+    "domain": "www.clarity.ms",
+    "path": "/",
+    "expires": 1799362822.155069,
+    "httpOnly": true,
+    "secure": true,
+    "sameSite": "None"
+  },
+  {
+    "name": "_fbp",
+    "value": "fb.1.1767826822255.284953736878875695",
+    "domain": ".key-drop.com",
+    "path": "/",
+    "expires": 1775602822,
+    "httpOnly": false,
+    "secure": false,
+    "sameSite": "Lax"
+  },
+  {
+    "name": "guest_id_marketing",
+    "value": "v1%3A176782682226328314",
+    "domain": ".twitter.com",
+    "path": "/",
+    "expires": 1802386822.39146,
+    "httpOnly": false,
+    "secure": true,
+    "sameSite": "None"
+  },
+  {
+    "name": "guest_id_ads",
+    "value": "v1%3A176782682226328314",
+    "domain": ".twitter.com",
+    "path": "/",
+    "expires": 1802386822.391555,
+    "httpOnly": false,
+    "secure": true,
+    "sameSite": "None"
+  },
+  {
+    "name": "personalization_id",
+    "value": "\"v1_6hArO/a/TXxfZXOky4cqDQ==\"",
+    "domain": ".twitter.com",
+    "path": "/",
+    "expires": 1802386822.391582,
+    "httpOnly": false,
+    "secure": true,
+    "sameSite": "None"
+  },
+  {
+    "name": "guest_id",
+    "value": "v1%3A176782682226328314",
+    "domain": ".twitter.com",
+    "path": "/",
+    "expires": 1802386822.391599,
+    "httpOnly": false,
+    "secure": true,
+    "sameSite": "None"
+  },
+  {
+    "name": "muc_ads",
+    "value": "d19c6c38-db25-408a-bc60-cfcf69bdb243",
+    "domain": ".t.co",
+    "path": "/",
+    "expires": 1802386822.472038,
+    "httpOnly": false,
+    "secure": true,
+    "sameSite": "None"
+  },
+  {
+    "name": "_clck",
+    "value": "u8po2c%5E2%5Eg2i%5E0%5E2198",
+    "domain": ".key-drop.com",
+    "path": "/",
+    "expires": 1799362822,
+    "httpOnly": false,
+    "secure": false,
+    "sameSite": "Lax"
+  },
+  {
+    "name": "_clsk",
+    "value": "r0vnxf%5E1767826823177%5E1%5E0%5El.clarity.ms%2Fcollect",
+    "domain": ".key-drop.com",
+    "path": "/",
+    "expires": 1767913223,
+    "httpOnly": false,
+    "secure": false,
+    "sameSite": "Lax"
+  },
+  {
+    "name": "MUID",
+    "value": "0879991E6493676029C48FC465006639",
+    "domain": ".bing.com",
+    "path": "/",
+    "expires": 1801522824.297308,
+    "httpOnly": false,
+    "secure": true,
+    "sameSite": "None"
+  },
+  {
+    "name": "MR",
+    "value": "0",
+    "domain": ".c.bing.com",
+    "path": "/",
+    "expires": 1768431624.297378,
+    "httpOnly": false,
+    "secure": true,
+    "sameSite": "None"
+  },
+  {
+    "name": "SRM_B",
+    "value": "0879991E6493676029C48FC465006639",
+    "domain": ".c.bing.com",
+    "path": "/",
+    "expires": 1801522824.2974,
+    "httpOnly": false,
+    "secure": true,
+    "sameSite": "None"
+  },
+  {
+    "name": "SM",
+    "value": "C",
+    "domain": ".c.clarity.ms",
+    "path": "/",
+    "expires": -1,
+    "httpOnly": false,
+    "secure": true,
+    "sameSite": "None"
+  },
+  {
+    "name": "MUID",
+    "value": "0879991E6493676029C48FC465006639",
+    "domain": ".clarity.ms",
+    "path": "/",
+    "expires": 1801522823.35962,
+    "httpOnly": false,
+    "secure": true,
+    "sameSite": "None"
+  },
+  {
+    "name": "MR",
+    "value": "0",
+    "domain": ".c.clarity.ms",
+    "path": "/",
+    "expires": 1768431623.359642,
+    "httpOnly": false,
+    "secure": true,
+    "sameSite": "None"
+  },
+  {
+    "name": "ANONCHK",
+    "value": "0",
+    "domain": ".c.clarity.ms",
+    "path": "/",
+    "expires": 1767827423.35965,
+    "httpOnly": false,
+    "secure": true,
+    "sameSite": "None"
+  }
+]

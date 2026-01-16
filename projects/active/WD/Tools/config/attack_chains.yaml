@@ -1,0 +1,229 @@
+# Attack Chains - One-Click Attack Recipes
+
+chains:
+  # === WEB AUDIT CHAINS ===
+  full_web_audit:
+    name: "Full Web Audit"
+    description: "Complete web application security audit"
+    category: web
+    estimated_time: "20-40 min"
+    steps:
+      - tool: subdomain
+        name: "Subdomain Enumeration"
+        args: {preset: standard}
+        save_output: subdomains
+      - tool: tech
+        name: "Technology Detection"
+        args: {preset: standard}
+        save_output: technologies
+      - tool: port
+        name: "Port Scan"
+        args: {preset: web}
+        save_output: ports
+      - tool: dir
+        name: "Directory Fuzzing"
+        args: {preset: standard}
+        for_each: live_hosts
+        save_output: directories
+      - tool: param
+        name: "Parameter Discovery"
+        for_each: endpoints
+        save_output: params
+      - tool: sqli
+        name: "SQL Injection"
+        args: {preset: standard}
+        for_each: params
+        save_output: sqli_vulns
+      - tool: xss
+        name: "XSS Scanner"
+        args: {preset: standard}
+        for_each: params
+        save_output: xss_vulns
+      - tool: report
+        name: "Generate Report"
+        args: {format: technical}
+        aggregate: true
+
+  quick_vuln_scan:
+    name: "Quick Vulnerability Scan"
+    description: "Fast vulnerability check on known endpoints"
+    category: web
+    estimated_time: "5-10 min"
+    steps:
+      - tool: tech
+        name: "Tech Detection"
+        args: {preset: quick}
+      - tool: sqli
+        name: "SQLi Quick"
+        args: {preset: quick}
+      - tool: xss
+        name: "XSS Quick"
+        args: {preset: quick}
+      - tool: lfi
+        name: "LFI Quick"
+        args: {preset: quick}
+        condition: has_param
+
+  recon_only:
+    name: "Reconnaissance Only"
+    description: "Passive and active reconnaissance"
+    category: recon
+    estimated_time: "10-15 min"
+    steps:
+      - tool: subdomain
+        name: "Subdomains"
+        args: {preset: standard}
+      - tool: dns
+        name: "DNS Enum"
+      - tool: wayback
+        name: "Wayback URLs"
+      - tool: tech
+        name: "Technologies"
+      - tool: headers
+        name: "Headers Analysis"
+
+  # === WEB3 CHAINS ===
+  smart_contract_audit:
+    name: "Smart Contract Audit"
+    description: "Complete smart contract security audit"
+    category: web3
+    estimated_time: "5-10 min"
+    steps:
+      - tool: contract
+        name: "Static Analysis"
+        args: {preset: deep}
+        save_output: contract_vulns
+      - tool: rugpull
+        name: "Rugpull Scan"
+        args: {preset: standard}
+        save_output: rugpull_risks
+      - tool: report
+        name: "Generate Report"
+        args: {format: technical, template: smart_contract}
+
+  defi_token_check:
+    name: "DeFi Token Check"
+    description: "Analyze token for honeypots and risks"
+    category: web3
+    estimated_time: "2-5 min"
+    steps:
+      - tool: token
+        name: "Token Analysis"
+        args: {check_honeypot: true}
+        save_output: token_info
+      - tool: rugpull
+        name: "Rugpull Scan"
+        args: {preset: quick}
+        save_output: rugpull_risks
+      - tool: address
+        name: "Owner Profile"
+        args: {tx_history: true}
+        use_from: token_info.owner
+
+  web3_full_audit:
+    name: "Web3 Full Audit"
+    description: "Complete Web3/DeFi security audit"
+    category: web3
+    estimated_time: "15-25 min"
+    steps:
+      - tool: contract
+        name: "Contract Analysis"
+        args: {preset: deep}
+      - tool: token
+        name: "Token Analysis"
+      - tool: rugpull
+        name: "Rugpull Scan"
+        args: {preset: deep}
+      - tool: address
+        name: "Address Profiling"
+        args: {tx_history: true, tx_limit: 20}
+      - tool: report
+        name: "Generate Report"
+
+  # === EXPLOITATION CHAINS ===
+  sqli_exploitation:
+    name: "SQLi Exploitation Chain"
+    description: "Detect and exploit SQL injection"
+    category: exploit
+    estimated_time: "10-20 min"
+    requires_confirmation: true
+    steps:
+      - tool: sqli
+        name: "SQLi Detection"
+        args: {preset: deep}
+        save_output: sqli_vulns
+      - tool: sqli
+        name: "Data Extraction"
+        args: {technique: union, extract: true}
+        condition: sqli_vulns.found
+        requires_confirmation: true
+
+  lfi_to_rce:
+    name: "LFI to RCE Chain"
+    description: "Exploit LFI for remote code execution"
+    category: exploit
+    estimated_time: "10-15 min"
+    requires_confirmation: true
+    steps:
+      - tool: lfi
+        name: "LFI Detection"
+        args: {preset: deep}
+        save_output: lfi_vulns
+      - tool: lfi
+        name: "Log Poisoning"
+        args: {technique: log_poison}
+        condition: lfi_vulns.found
+      - tool: payload
+        name: "Generate Payload"
+        args: {type: webshell}
+
+  # === STEALTH CHAINS ===
+  stealth_recon:
+    name: "Stealth Reconnaissance"
+    description: "Low-noise passive reconnaissance"
+    category: stealth
+    estimated_time: "15-30 min"
+    steps:
+      - tool: wayback
+        name: "Wayback URLs"
+        args: {delay: 2}
+      - tool: dns
+        name: "Passive DNS"
+        args: {passive_only: true}
+      - tool: dorks
+        name: "Google Dorks"
+      - tool: headers
+        name: "Headers Check"
+        args: {single_request: true}
+
+  stealth_vuln_check:
+    name: "Stealth Vuln Check"
+    description: "Low-noise vulnerability scanning"
+    category: stealth
+    estimated_time: "20-40 min"
+    steps:
+      - tool: sqli
+        name: "SQLi Stealth"
+        args: {preset: stealth, delay: 3}
+      - tool: xss
+        name: "XSS Stealth"
+        args: {preset: stealth, delay: 3}
+
+# Quick access categories
+categories:
+  web:
+    name: "Web Application"
+    icon: "🌐"
+    chains: [full_web_audit, quick_vuln_scan, recon_only]
+  web3:
+    name: "Web3/Blockchain"
+    icon: "⛓️"
+    chains: [smart_contract_audit, defi_token_check, web3_full_audit]
+  exploit:
+    name: "Exploitation"
+    icon: "💥"
+    chains: [sqli_exploitation, lfi_to_rce]
+  stealth:
+    name: "Stealth"
+    icon: "🥷"
+    chains: [stealth_recon, stealth_vuln_check]

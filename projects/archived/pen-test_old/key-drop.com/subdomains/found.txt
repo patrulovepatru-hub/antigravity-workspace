@@ -1,0 +1,34 @@
+# Subdomains Found - key-drop.com
+# Collected: 2026-01-07
+
+## Active Subdomains
+
+### www.key-drop.com
+- IP: 104.18.8.108, 104.18.9.108
+- Type: Main website mirror
+
+### cdn.key-drop.com
+- IP: 104.18.8.108, 104.18.9.108
+- Type: Content Delivery Network
+- Note: Same Cloudflare IPs as main domain
+
+### ws.key-drop.com  [INTERESTING]
+- IP: 104.18.8.108, 104.18.9.108
+- Type: WebSocket server
+- Note: Real-time communications - case opening, battles, notifications
+- Attack potential: WebSocket injection, auth bypass, message tampering
+
+## Not Found
+- api.key-drop.com
+- app.key-drop.com
+- mail.key-drop.com
+- admin.key-drop.com
+- panel.key-drop.com
+- dev.key-drop.com
+- staging.key-drop.com
+- test.key-drop.com
+- beta.key-drop.com
+- api-v1.key-drop.com
+- api-v2.key-drop.com
+- socket.key-drop.com
+- payments.key-drop.com

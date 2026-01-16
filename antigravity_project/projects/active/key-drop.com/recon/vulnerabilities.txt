@@ -1,0 +1,54 @@
+# Confirmed Vulnerabilities - key-drop.com
+# Collected: 2026-01-07
+
+## HIGH RISK
+
+### 1. Missing X-Frame-Options Header
+- Risk: Clickjacking attacks possible
+- Impact: Users could be tricked into clicking hidden elements
+- Affected: Main site (/)
+- Remediation: Add "X-Frame-Options: DENY" or "SAMEORIGIN"
+
+### 2. Insecure Cookie: key-lang
+- Missing: Secure flag
+- Missing: HttpOnly flag
+- Risk: Cookie can be stolen via XSS, transmitted over HTTP
+- Impact: Session hijacking potential
+
+### 3. BREACH Attack Potential
+- Content-Encoding: deflate enabled
+- Risk: SSL/TLS secrets could be extracted if CSRF tokens in compressed responses
+- Reference: http://breachattack.com/
+
+## MEDIUM RISK
+
+### 4. Missing Content-Security-Policy
+- Risk: XSS attacks not mitigated by browser
+- Impact: If injection found, full JavaScript execution possible
+
+### 5. Zero WAF Information Disclosure
+- Headers expose: zero: zero-waf, zero-id: [request-id]
+- Risk: Attacker knows secondary WAF type
+- Can research specific bypasses for this WAF
+
+## LOW RISK
+
+### 6. IP in Cookie (1.0.1.1)
+- Found in __cf_bm cookie
+- Likely Cloudflare WARP IP, not internal
+- Minor information disclosure
+
+### 7. HTTP/3 Advertising
+- alt-svc header advertising QUIC
+- Not a vulnerability, but may have different behavior
+
+## SSL/TLS Information
+- Certificate: CN=key-drop.com
+- Issuer: Google Trust Services (WE1)
+- Cipher: TLS_AES_256_GCM_SHA384 (Strong)
+
+## Interesting Paths Found
+- /clientaccesspolicy.xml (Silverlight cross-domain policy)
+- /robots.txt (24 entries)
+- /cgi-local/ (triggers different headers)
+- /admin.nsf (returns Cloudflare challenge)

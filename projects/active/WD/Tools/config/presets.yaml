@@ -1,0 +1,236 @@
+# Presets por herramienta - Fase 1
+
+recon:
+  passive:
+    quick:
+      description: "Recon básico sin interacción"
+      modules: [whois, dns_basic]
+      timeout: 30
+    standard:
+      description: "Recon pasivo completo"
+      modules: [whois, dns_full, certs, archives]
+      timeout: 120
+    deep:
+      description: "OSINT extensivo"
+      modules: [whois, dns_full, certs, archives, social, leaks]
+      timeout: 300
+
+  active:
+    quick:
+      description: "Subdominios rápido"
+      wordlist: small
+      threads: 10
+    standard:
+      description: "Enumeración estándar"
+      wordlist: medium
+      threads: 50
+    aggressive:
+      description: "Enumeración exhaustiva"
+      wordlist: large
+      threads: 100
+      recursive: true
+
+scanning:
+  port:
+    top20:
+      description: "20 puertos más comunes"
+      ports: "21,22,23,25,53,80,110,111,135,139,143,443,445,993,995,1723,3306,3389,5900,8080"
+      timing: 3
+    web:
+      description: "Puertos web"
+      ports: "80,443,8000,8080,8443,8888,3000,5000,9000"
+      timing: 4
+    full:
+      description: "Todos los puertos TCP"
+      ports: "1-65535"
+      timing: 4
+    stealth:
+      description: "Escaneo sigiloso"
+      ports: "21,22,80,443,8080"
+      timing: 1
+      technique: syn
+
+  fuzzing:
+    quick:
+      description: "Directorios comunes"
+      wordlist: common.txt
+      threads: 20
+      extensions: [php, html]
+    standard:
+      description: "Fuzzing moderado"
+      wordlist: medium.txt
+      threads: 50
+      extensions: [php, html, js, asp, aspx, jsp]
+    deep:
+      description: "Fuzzing exhaustivo"
+      wordlist: large.txt
+      threads: 100
+      extensions: [php, html, js, asp, aspx, jsp, txt, bak, old]
+      recursive: true
+
+vuln_assessment:
+  sqli:
+    quick:
+      description: "Error-based rápido"
+      techniques: [error]
+      level: 1
+      payloads: 5
+    standard:
+      description: "SQLi estándar"
+      techniques: [error, boolean, union]
+      level: 3
+      payloads: 20
+    deep:
+      description: "SQLi exhaustivo"
+      techniques: [error, boolean, union, time, stacked]
+      level: 5
+      payloads: 100
+    stealth:
+      description: "SQLi sigiloso"
+      techniques: [boolean]
+      level: 2
+      delay: 2
+      payloads: 10
+
+  xss:
+    quick:
+      description: "XSS básico"
+      types: [reflected]
+      payloads: 10
+    standard:
+      description: "XSS completo"
+      types: [reflected, stored, dom]
+      payloads: 50
+    deep:
+      description: "XSS exhaustivo"
+      types: [reflected, stored, dom]
+      payloads: 200
+      encoding: [url, html, base64]
+
+  lfi:
+    quick:
+      description: "LFI básico"
+      depth: 3
+      payloads: 10
+    standard:
+      description: "LFI con wrappers"
+      depth: 6
+      wrappers: [php, data, expect]
+      payloads: 50
+    deep:
+      description: "LFI/RFI completo"
+      depth: 10
+      wrappers: [php, data, expect, input, filter]
+      rfi: true
+      payloads: 100
+
+  ssrf:
+    quick:
+      description: "SSRF básico"
+      targets: [localhost, metadata]
+      payloads: 10
+    standard:
+      description: "SSRF cloud"
+      targets: [localhost, metadata, aws, gcp, azure]
+      payloads: 30
+    deep:
+      description: "SSRF exhaustivo"
+      targets: [localhost, metadata, aws, gcp, azure, internal]
+      protocols: [http, gopher, dict, file]
+      payloads: 100
+
+exploitation:
+  shells:
+    reverse:
+      types: [bash, python, php, nc]
+    bind:
+      types: [bash, python, nc]
+    web:
+      types: [php, asp, jsp]
+
+  payloads:
+    encoding:
+      types: [url, base64, hex, unicode]
+    obfuscation:
+      levels: [low, medium, high]
+
+post_exploitation:
+  creds:
+    quick:
+      targets: [env, config, history]
+    standard:
+      targets: [env, config, history, db, ssh_keys]
+    deep:
+      targets: [env, config, history, db, ssh_keys, browser, memory]
+
+  privesc:
+    linux:
+      checks: [suid, sudo, cron, capabilities, kernel]
+    windows:
+      checks: [services, registry, tokens, scheduled_tasks]
+
+reporting:
+  formats:
+    executive:
+      description: "Resumen ejecutivo"
+      sections: [summary, risk_score, recommendations]
+    technical:
+      description: "Informe técnico"
+      sections: [summary, findings, evidence, remediation]
+    bugbounty:
+      description: "Formato bug bounty"
+      sections: [title, severity, description, steps, impact, poc]
+
+web3:
+  contract:
+    quick:
+      description: "Análisis rápido de contrato"
+      checks: [reentrancy, tx_origin, selfdestruct]
+    standard:
+      description: "Análisis estándar"
+      checks: [reentrancy, tx_origin, selfdestruct, delegatecall, unchecked_return]
+      include_defi: true
+    deep:
+      description: "Auditoría completa"
+      checks: all
+      include_defi: true
+      gas_analysis: true
+
+  token:
+    quick:
+      description: "Check básico de token"
+      check_honeypot: true
+    standard:
+      description: "Análisis completo"
+      check_honeypot: true
+      check_liquidity: true
+    deep:
+      description: "Análisis exhaustivo"
+      check_honeypot: true
+      check_liquidity: true
+      check_holders: true
+
+  rugpull:
+    quick:
+      description: "Scan rápido de rugpull"
+      patterns: [hidden_mint, trading_enable, blacklist]
+    standard:
+      description: "Scan estándar"
+      patterns: [hidden_mint, trading_enable, blacklist, changeable_fee, remove_liquidity]
+    deep:
+      description: "Scan exhaustivo"
+      patterns: all
+
+  address:
+    quick:
+      description: "Perfil básico"
+      include_txs: false
+    standard:
+      description: "Perfil con transacciones"
+      include_txs: true
+      tx_limit: 10
+    deep:
+      description: "Perfil completo"
+      include_txs: true
+      tx_limit: 50
+      include_tokens: true

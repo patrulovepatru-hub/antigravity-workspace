@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Discover the best AI productivity tools to boost your work efficiency. Reviews of MacBook Pro M3, Notion AI, Grammarly Business, RescueTime, and MasterClass productivity courses.">
+    <meta name="keywords" content="best ai productivity tools, ai automation software review, productivity laptops for business, ai workflow automation tools, productivity software comparison">
+    <meta name="author" content="AI Productivity Hub">
+    <title>AI Productivity Hub - Boost Your Work with Smart AI Productivity Tools</title>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f8f9fa;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Header */
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            text-decoration: none;
+            color: white;
+        }
+        
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+        
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        
+        .nav-links a:hover {
+            color: #f1c40f;
+        }
+        
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 4rem 0;
+            text-align: center;
+        }
+        
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+        
+        .hero p {
+            font-size: 1.3rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+        
+        .cta-button {
+            display: inline-block;
+            background: #f39c12;
+            color: white;
+            padding: 15px 30px;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: background 0.3s ease;
+            font-size: 1.1rem;
+        }
+        
+        .cta-button:hover {
+            background: #e67e22;
+            transform: translateY(-2px);
+        }
+        
+        /* Products Section */
+        .products {
+            padding: 4rem 0;
+            background: white;
+        }
+        
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 3rem;
+            color: #2c3e50;
+        }
+        
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        
+        .product-card {
+            background: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 1px solid #eee;
+        }
+        
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        }
+        
+        .product-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+        
+        .product-title {
+            font-size: 1.4rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+            color: #2c3e50;
+        }
+        
+        .product-description {
+            color: #7f8c8d;
+            margin-bottom: 1rem;
+            line-height: 1.5;
+        }
+        
+        .product-features {
+            list-style: none;
+            margin-bottom: 1.5rem;
+        }
+        
+        .product-features li {
+            padding: 0.3rem 0;
+            color: #555;
+        }
+        
+        .product-features li:before {
+            content: "✓ ";
+            color: #27ae60;
+            font-weight: bold;
+        }
+        
+        .product-cta {
+            display: block;
+            width: 100%;
+            background: #3498db;
+            color: white;
+            padding: 12px 20px;
+            text-align: center;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: background 0.3s ease;
+        }
+        
+        .product-cta:hover {
+            background: #2980b9;
+        }
+        
+        /* Footer */
+        footer {
+            background: #2c3e50;
+            color: white;
+            padding: 2rem 0;
+            text-align: center;
+        }
+        
+        .footer-content {
+            margin-bottom: 1rem;
+        }
+        
+        .disclaimer {
+            font-size: 0.9rem;
+            opacity: 0.8;
+            max-width: 800px;
+            margin: 0 auto;
+            line-height: 1.5;
+        }
+        
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .nav-links {
+                gap: 1rem;
+                flex-wrap: wrap;
+            }
+            
+            .hero h1 {
+                font-size: 2rem;
+            }
+            
+            .hero p {
+                font-size: 1.1rem;
+            }
+            
+            .section-title {
+                font-size: 2rem;
+            }
+            
+            .products-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .container {
+                padding: 0 15px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .hero {
+                padding: 2rem 0;
+            }
+            
+            .products {
+                padding: 2rem 0;
+            }
+            
+            .nav-links {
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="container">
+            <a href="#" class="logo">aiproductivityhub</a>
+            <ul class="nav-links">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#products">Products</a></li>
+                <li><a href="#reviews">Reviews</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section id="home" class="hero">
+            <div class="container">
+                <h1>Boost Your Work with Smart AI Productivity Tools</h1>
+                <p>Discover the best AI-powered tools and software to automate workflows, enhance productivity, and transform your business efficiency.</p>
+                <a href="#products" class="cta-button">Explore Top Products</a>
+            </div>
+        </section>
+
+        <section id="products" class="products">
+            <div class="container">
+                <h2 class="section-title">Top AI Productivity Tools & Reviews</h2>
+                
+                <div class="products-grid">
+                    <div class="product-card">
+                        <img src="https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=400&h=200&fit=crop&auto=format" alt="MacBook Pro M3" class="product-image">
+                        <h3 class="product-title">MacBook Pro M3 for AI Workflows</h3>
+                        <p class="product-description">The ultimate laptop for AI professionals with M3 chip performance, perfect for machine learning and complex productivity workflows.</p>
+                        <ul class="product-features">
+                            <li>M3 Pro/Max chip with enhanced AI processing</li>
+                            <li>Up to 128GB unified memory</li>
+                            <li>Optimized for AI development tools</li>
+                            <li>18-hour battery life</li>
+                        </ul>
+                        <a href="https://www.amazon.com/s?k=KEYWORD&tag=tunombre-21" target="_blank" rel="nofollow noopener" data-placeholder="#amazon-aiproductivityhub-macbookprom3" class="product-cta">Check Latest Price</a>
+                    </div>
+
+                    <div class="product-card">
+                        <img src="https://images.unsplash.com/photo-1611224923853-80b023f02d71?w=400&h=200&fit=crop&auto=format" alt="Notion AI" class="product-image">
+                        <h3 class="product-title">Notion AI Productivity Software</h3>
+                        <p class="product-description">Transform your workspace with AI-powered writing, planning, and organization tools integrated into the world's most flexible productivity platform.</p>
+                        <ul class="product-features">
+                            <li>AI writing assistant and content generator</li>
+                            <li>Automated task management</li>
+                            <li>Smart templates and workflows</li>
+                            <li>Team collaboration features</li>
+                        </ul>
+                        <a href="https://www.amazon.com/s?k=KEYWORD&tag=tunombre-21" target="_blank" rel="nofollow noopener" data-placeholder="#amazon-aiproductivityhub-notionai" class="product-cta">Start Free Trial</a>
+                    </div>
+
+                    <div class="product-card">
+                        <img src="https://images.unsplash.com/photo-1455390582262-044cdead277a?w=400&h=200&fit=crop&auto=format" alt="Grammarly Business" class="product-image">
+                        <h3 class="product-title">Grammarly Business Writing Assistant</h3>
+                        <p class="product-description">Professional AI writing assistant that enhances business communication with advanced grammar, style, and tone suggestions.</p>
+                        <ul class="product-features">
+                            <li>Advanced grammar and spell checking</li>
+                            <li>Professional tone recommendations</li>
+                            <li>Brand voice consistency</li>
+                            <li>Team performance analytics</li>
+                        </ul>
+                        <a href="https://www.amazon.com/s?k=KEYWORD&tag=tunombre-21" target="_blank" rel="nofollow noopener" data-placeholder="#amazon-aiproductivityhub-grammarlybusiness" class="product-cta">Get Business Plan</a>
+                    </div>
+
+                    <div class="product-card">
+                        <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=400&h=200&fit=crop&auto=format" alt="RescueTime" class="product-image">
+                        <h3 class="product-title">RescueTime Productivity Tracking</h3>
+                        <p class="product-description">Intelligent time tracking software that automatically monitors your digital habits and provides insights to optimize your productivity.</p>
+                        <ul class="product-features">
+                            <li>Automatic time tracking across devices</li>
+                            <li>Detailed productivity reports</li>
+                            <li>Website and app blocking</li>
+                            <li>Focus time optimization</li>
+                        </ul>
+                        <a href="https://www.amazon.com/s?k=KEYWORD&tag=tunombre-21" target="_blank" rel="nofollow noopener" data-placeholder="#amazon-aiproductivityhub-rescuetime" class="product-cta">Try RescueTime</a>
+                    </div>
+
+                    <div class="product-card">
+                        <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=400&h=200&fit=crop&auto=format" alt="MasterClass Productivity" class="product-image">
+                        <h3 class="product-title">MasterClass Productivity Courses</h3>
+                        <p class="product-description">Learn from world-class experts and industry leaders to master productivity, leadership, and business strategy with premium online courses.</p>
+                        <ul class="product-features">
+                            <li>Expert-led productivity masterclasses</li>
+                            <li>Time management strategies</li>
+                            <li>Leadership and efficiency training</li>
+                            <li>Mobile and desktop access</li>
+                        </ul>
+                        <a href="https://www.amazon.com/s?k=KEYWORD&tag=tunombre-21" target="_blank" rel="nofollow noopener" data-placeholder="#amazon-aiproductivityhub-masterclass" class="product-cta">Start Learning</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <h3>aiproductivityhub</h3>
+                <p>Your trusted source for AI productivity tool reviews and recommendations.</p>
+            </div>
+            <div class="disclaimer">
+                <p><strong>Affiliate Disclosure:</strong> This website contains affiliate links, which means we may earn a commission if you click on a link and purchase a product or service. This comes at no additional cost to you. We only recommend products and services that we believe will add value to our readers. Our affiliate relationships do not influence our content or recommendations.</p>
+                <p style="margin-top: 1rem;">&copy; 2024 AI Productivity Hub. All rights reserved. | <a href="#privacy" style="color: #3498db;">Privacy Policy</a> | <a href="#terms" style="color: #3498db;">Terms of Service</a></p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

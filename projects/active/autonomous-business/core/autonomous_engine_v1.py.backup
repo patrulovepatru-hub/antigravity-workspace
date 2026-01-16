@@ -1,0 +1,533 @@
+#!/usr/bin/env python3
+"""
+SISTEMA AUTÓNOMO DE GENERACIÓN DE NEGOCIOS ONLINE
+Version: 1.0
+Hardware optimizado: AMD 9800X3D + 64GB RAM
+"""
+
+import os
+import sys
+import json
+import time
+import requests
+import subprocess
+from datetime import datetime
+from pathlib import Path
+from typing import Dict, List, Optional
+import random
+
+# Cargar variables de entorno
+from dotenv import load_dotenv
+load_dotenv()
+
+
+class AutonomousEngine:
+    """Motor principal del sistema autónomo"""
+    
+    def __init__(self):
+        self.base_path = Path.home() / "autonomous-business"
+        self.sites_path = self.base_path / "sites"
+        self.logs_path = self.base_path / "logs"
+        self.data_path = self.base_path / "data"
+        
+        # Crear directorios si no existen
+        for path in [self.sites_path, self.logs_path, self.data_path]:
+            path.mkdir(parents=True, exist_ok=True)
+        
+        # Cargar credenciales
+        self.anthropic_key = os.getenv("ANTHROPIC_API_KEY")
+        self.github_token = os.getenv("GITHUB_TOKEN")
+        self.cloudflare_token = os.getenv("CLOUDFLARE_API_TOKEN")
+        self.amazon_tag = os.getenv("AMAZON_ASSOCIATE_TAG")
+        
+        # Validar credenciales críticas
+        self._validate_credentials()
+        
+        # Configuración
+        self.content_language = os.getenv("CONTENT_LANGUAGE", "en")
+        self.target_sites_per_day = int(os.getenv("TARGET_SITES_PER_DAY", 3))
+        self.max_concurrent = int(os.getenv("MAX_CONCURRENT_BUILDS", 5))
+        
+        # Nichos validados (high CPC + low competition)
+        self.niches = [
+            {
+                "name": "ai_productivity_tools",
+                "keywords": ["ai tools", "productivity software", "automation"],
+                "cpc": 3.8,
+                "products": ["laptops", "software", "courses"]
+            },
+            {
+                "name": "remote_work_gadgets",
+                "keywords": ["remote work", "home office", "ergonomic"],
+                "cpc": 3.2,
+                "products": ["webcams", "microphones", "desks"]
+            },
+            {
+                "name": "smart_home_devices",
+                "keywords": ["smart home", "iot devices", "home automation"],
+                "cpc": 2.9,
+                "products": ["smart lights", "security cameras", "thermostats"]
+            },
+            {
+                "name": "fitness_tech",
+                "keywords": ["fitness tracker", "smart watch", "health tech"],
+                "cpc": 3.5,
+                "products": ["fitness trackers", "smart scales", "workout equipment"]
+            },
+            {
+                "name": "gaming_peripherals",
+                "keywords": ["gaming mouse", "mechanical keyboard", "gaming headset"],
+                "cpc": 2.7,
+                "products": ["gaming mice", "keyboards", "headsets"]
+            }
+        ]
+        
+        self.log_file = self.logs_path / "system.log"
+        self.metrics_file = self.data_path / "metrics.json"
+    
+    def _validate_credentials(self):
+        """Validar que existan las credenciales necesarias"""
+        required = {
+            "ANTHROPIC_API_KEY": self.anthropic_key,
+            "GITHUB_TOKEN": self.github_token,
+            "CLOUDFLARE_API_TOKEN": self.cloudflare_token,
+            "AMAZON_ASSOCIATE_TAG": self.amazon_tag
+        }
+        
+        missing = [k for k, v in required.items() if not v]
+        
+        if missing:
+            self.log("❌ ERROR: Faltan credenciales críticas:", level="ERROR")
+            for cred in missing:
+                self.log(f"   - {cred}", level="ERROR")
+            self.log("\n💡 Edita el archivo .env con tus credenciales", level="ERROR")
+            sys.exit(1)
+    
+    def log(self, message: str, level: str = "INFO"):
+        """Logging con timestamp"""
+        timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        log_entry = f"[{timestamp}] [{level}] {message}"
+        
+        # Imprimir en consola
+        print(log_entry)
+        
+        # Guardar en archivo
+        with open(self.log_file, "a", encoding="utf-8") as f:
+            f.write(log_entry + "\n")
+    
+    def call_claude(self, prompt: str, max_tokens: int = 2000) -> Optional[str]:
+        """Llamar a Claude API de Anthropic"""
+        self.log("🤖 Llamando a Claude API...")
+        
+        headers = {
+            "x-api-key": self.anthropic_key,
+            "anthropic-version": "2023-06-01",
+            "content-type": "application/json"
+        }
+        
+        payload = {
+            "model": "claude-sonnet-4-20250514",
+            "max_tokens": max_tokens,
+            "messages": [{
+                "role": "user",
+                "content": prompt
+            }]
+        }
+        
+        try:
+            response = requests.post(
+                "https://api.anthropic.com/v1/messages",
+                headers=headers,
+                json=payload,
+                timeout=60
+            )
+            
+            if response.status_code == 200:
+                content = response.json()["content"][0]["text"]
+                self.log("✅ Respuesta recibida de Claude")
+                return content
+            else:
+                self.log(f"❌ Error API Claude: {response.status_code} - {response.text}", level="ERROR")
+                return None
+                
+        except Exception as e:
+            self.log(f"❌ Excepción llamando a Claude: {e}", level="ERROR")
+            return None
+    
+    def generate_business_plan(self, niche: Dict) -> Optional[Dict]:
+        """Generar plan de negocio para un nicho específico"""
+        self.log(f"📋 Generando plan de negocio: {niche['name']}")
+        
+        prompt = f"""You are an expert in online business creation. Generate a detailed business plan for a niche affiliate website.
+
+Niche: {niche['name']}
+Target Keywords: {', '.join(niche['keywords'])}
+Average CPC: ${niche['cpc']}
+Product Categories: {', '.join(niche['products'])}
+
+Create a business plan in JSON format with this exact structure:
+{{
+  "site_name": "short-domain-friendly-name",
+  "tagline": "compelling tagline under 60 chars",
+  "target_keywords": ["keyword1", "keyword2", "keyword3", "keyword4", "keyword5"],
+  "content_pillars": ["pillar1", "pillar2", "pillar3"],
+  "top_products": ["product1", "product2", "product3", "product4", "product5"],
+  "traffic_strategy": "specific SEO and content strategy",
+  "monetization_focus": "affiliate links placement strategy",
+  "estimated_monthly_revenue_month3": 500
+}}
+
+Requirements:
+- Site name must be catchy, SEO-friendly, and available as .com/.net
+- Keywords must have commercial intent (buying keywords)
+- Products must be available on Amazon
+- Be specific and actionable
+
+Respond ONLY with valid JSON, no explanations."""
+
+        response = self.call_claude(prompt, max_tokens=1500)
+        
+        if not response:
+            return None
+        
+        try:
+            # Extraer JSON (Claude a veces añade texto antes/después)
+            start = response.find("{")
+            end = response.rfind("}") + 1
+            json_str = response[start:end]
+            plan = json.loads(json_str)
+            
+            self.log(f"✅ Plan generado: {plan['site_name']}")
+            return plan
+            
+        except json.JSONDecodeError as e:
+            self.log(f"❌ Error parseando JSON: {e}", level="ERROR")
+            self.log(f"Respuesta recibida: {response[:200]}...", level="DEBUG")
+            return None
+    
+    def generate_html_content(self, plan: Dict) -> str:
+        """Generar contenido HTML completo del sitio"""
+        self.log(f"✍️ Generando contenido HTML para {plan['site_name']}")
+        
+        prompt = f"""Create a complete, professional HTML page for this affiliate website:
+
+Site Name: {plan['site_name']}
+Tagline: {plan['tagline']}
+Keywords: {', '.join(plan['target_keywords'])}
+Top Products: {', '.join(plan['top_products'])}
+
+Requirements:
+1. Complete HTML5 structure with modern, responsive CSS
+2. Include a hero section with the tagline
+3. Product showcase section with 5 products (use placeholder images from unsplash)
+4. Each product should have an affiliate link placeholder: href="#amazon-{plan['site_name']}-PRODUCTID"
+5. Include SEO meta tags (title, description, keywords)
+6. Add a simple navigation menu
+7. Include a footer with disclaimer
+8. Use inline CSS (no external files)
+9. Mobile-responsive design
+10. Professional color scheme (not too flashy)
+11. Clear call-to-action buttons
+
+Write ONLY the HTML code, no explanations. Make it production-ready."""
+
+        html = self.call_claude(prompt, max_tokens=4000)
+        
+        if html and "<!DOCTYPE html>" in html:
+            # Limpiar posibles marcas de código
+            html = html.replace("```html", "").replace("```", "").strip()
+            
+            # Inserting Amazon Associate tag in links
+            html = html.replace(
+                'href="#amazon-',
+                f'href="https://www.amazon.com/s?k=KEYWORD&tag={self.amazon_tag}" target="_blank" rel="nofollow noopener" data-placeholder="#amazon-'
+            )
+            
+            self.log("✅ HTML generado correctamente")
+            return html
+        else:
+            self.log("❌ Error: HTML inválido generado", level="ERROR")
+            return None
+    
+    def create_site(self, plan: Dict) -> Optional[Path]:
+        """Crear sitio completo con estructura de archivos"""
+        site_name = plan['site_name'].lower().replace(" ", "-")
+        site_path = self.sites_path / site_name
+        
+        # Verificar si ya existe
+        if site_path.exists():
+            self.log(f"⚠️ Sitio {site_name} ya existe, saltando...", level="WARNING")
+            return None
+        
+        # Crear directorio
+        site_path.mkdir(parents=True, exist_ok=True)
+        self.log(f"📁 Creando sitio en: {site_path}")
+        
+        # Generar HTML
+        html_content = self.generate_html_content(plan)
+        if not html_content:
+            self.log(f"❌ No se pudo generar HTML para {site_name}", level="ERROR")
+            return None
+        
+        # Guardar index.html
+        index_file = site_path / "index.html"
+        index_file.write_text(html_content, encoding="utf-8")
+        self.log(f"✅ Creado: {index_file}")
+        
+        # Crear robots.txt
+        robots_content = """User-agent: *
+Allow: /
+Sitemap: https://{site_name}.pages.dev/sitemap.xml
+
+# SEO optimized robots.txt
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+"""
+        (site_path / "robots.txt").write_text(robots_content, encoding="utf-8")
+        
+        # Crear README con información del sitio
+        readme_content = f"""# {plan['site_name']}
+
+## Información del Sitio
+
+- **Tagline**: {plan['tagline']}
+- **Nicho**: {plan.get('niche', 'General')}
+- **Keywords**: {', '.join(plan['target_keywords'])}
+- **Productos**: {', '.join(plan['top_products'])}
+- **Creado**: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
+
+## Estrategia
+
+- **Monetización**: {plan['monetization_focus']}
+- **Tráfico**: {plan['traffic_strategy']}
+- **Ingresos estimados (mes 3)**: ${plan['estimated_monthly_revenue_month3']}
+
+## Deployment
+
+```bash
+cd {site_path}
+wrangler pages deploy . --project-name={site_name}
+```
+
+## URL
+
+https://{site_name}.pages.dev
+"""
+        (site_path / "README.md").write_text(readme_content, encoding="utf-8")
+        
+        self.log(f"✅ Sitio {site_name} creado completamente")
+        return site_path
+    
+    def deploy_to_cloudflare(self, site_path: Path, site_name: str) -> Optional[str]:
+        """Deployar sitio a Cloudflare Pages"""
+        self.log(f"☁️ Desplegando {site_name} a Cloudflare Pages...")
+        
+        # Verificar que wrangler esté instalado
+        try:
+            subprocess.run(["wrangler", "--version"], 
+                         capture_output=True, check=True)
+        except (subprocess.CalledProcessError, FileNotFoundError):
+            self.log("❌ Wrangler no está instalado. Instalar: npm install -g wrangler", level="ERROR")
+            return None
+        
+        try:
+            # Primero, login en Cloudflare (solo primera vez)
+            self.log("🔐 Configurando autenticación Cloudflare...")
+            os.environ["CLOUDFLARE_API_TOKEN"] = self.cloudflare_token
+            
+            # Deploy usando Wrangler
+            cmd = [
+                "wrangler", "pages", "deploy", str(site_path),
+                "--project-name", site_name,
+                "--branch", "main"
+            ]
+            
+            self.log(f"🚀 Ejecutando: {' '.join(cmd)}")
+            
+            result = subprocess.run(
+                cmd,
+                capture_output=True,
+                text=True,
+                cwd=site_path
+            )
+            
+            if result.returncode == 0:
+                url = f"https://{site_name}.pages.dev"
+                self.log(f"✅ Sitio desplegado: {url}")
+                return url
+            else:
+                self.log(f"❌ Error en deployment: {result.stderr}", level="ERROR")
+                self.log(f"💡 Puedes deployar manualmente: cd {site_path} && wrangler pages deploy .", level="INFO")
+                return None
+                
+        except Exception as e:
+            self.log(f"❌ Excepción en deployment: {e}", level="ERROR")
+            return None
+    
+    def save_metrics(self, site_name: str, plan: Dict, url: Optional[str]):
+        """Guardar métricas del sitio creado"""
+        metrics = {
+            "site_name": site_name,
+            "url": url or "pending_deployment",
+            "created_at": datetime.now().isoformat(),
+            "niche": plan.get('niche', 'unknown'),
+            "keywords": plan['target_keywords'],
+            "estimated_revenue": plan['estimated_monthly_revenue_month3'],
+            "status": "deployed" if url else "local_only"
+        }
+        
+        # Leer métricas existentes
+        if self.metrics_file.exists():
+            with open(self.metrics_file, "r", encoding="utf-8") as f:
+                all_metrics = json.load(f)
+        else:
+            all_metrics = []
+        
+        all_metrics.append(metrics)
+        
+        # Guardar métricas actualizadas
+        with open(self.metrics_file, "w", encoding="utf-8") as f:
+            json.dump(all_metrics, f, indent=2, ensure_ascii=False)
+        
+        self.log(f"📊 Métricas guardadas: {len(all_metrics)} sitios totales")
+    
+    def build_business(self, niche: Dict) -> bool:
+        """Pipeline completo: Planificar → Crear → Deployar"""
+        self.log("\n" + "="*60)
+        self.log(f"🚀 INICIANDO NUEVO NEGOCIO: {niche['name']}")
+        self.log("="*60 + "\n")
+        
+        try:
+            # 1. Generar plan de negocio
+            plan = self.generate_business_plan(niche)
+            if not plan:
+                self.log("❌ No se pudo generar plan", level="ERROR")
+                return False
+            
+            plan['niche'] = niche['name']  # Añadir info del nicho
+            
+            # 2. Crear sitio
+            site_path = self.create_site(plan)
+            if not site_path:
+                self.log("❌ No se pudo crear sitio", level="ERROR")
+                return False
+            
+            site_name = plan['site_name'].lower().replace(" ", "-")
+            
+            # 3. Deployar a Cloudflare
+            url = self.deploy_to_cloudflare(site_path, site_name)
+            
+            # 4. Guardar métricas
+            self.save_metrics(site_name, plan, url)
+            
+            self.log("\n" + "="*60)
+            self.log(f"✅ NEGOCIO {site_name.upper()} COMPLETADO")
+            if url:
+                self.log(f"🌐 URL: {url}")
+            else:
+                self.log(f"📁 Local: {site_path}")
+                self.log(f"💡 Deploy manual: cd {site_path} && wrangler pages deploy .")
+            self.log("="*60 + "\n")
+            
+            return True
+            
+        except Exception as e:
+            self.log(f"❌ Error en pipeline: {e}", level="ERROR")
+            return False
+    
+    def run_autonomous(self, interval_hours: float = 8):
+        """Modo autónomo: crear negocios continuamente"""
+        self.log("\n" + "🚀"*30)
+        self.log("SISTEMA AUTÓNOMO INICIADO")
+        self.log("🚀"*30 + "\n")
+        self.log(f"⚙️ Configuración:")
+        self.log(f"   - Idioma contenido: {self.content_language}")
+        self.log(f"   - Sitios objetivo/día: {self.target_sites_per_day}")
+        self.log(f"   - Intervalo entre sitios: {interval_hours}h")
+        self.log(f"   - Builds concurrentes: {self.max_concurrent}")
+        self.log(f"   - Amazon tag: {self.amazon_tag}")
+        self.log("")
+        
+        niche_index = 0
+        sites_created = 0
+        
+        while True:
+            try:
+                # Seleccionar nicho (rotación)
+                niche = self.niches[niche_index % len(self.niches)]
+                
+                # Ejecutar pipeline
+                success = self.build_business(niche)
+                
+                if success:
+                    sites_created += 1
+                    niche_index += 1
+                    
+                    self.log(f"\n💰 PROGRESO:")
+                    self.log(f"   - Sitios creados hoy: {sites_created}")
+                    self.log(f"   - Siguiente sitio en: {interval_hours}h")
+                    self.log(f"   - Nicho siguiente: {self.niches[(niche_index) % len(self.niches)]['name']}\n")
+                    
+                    # Esperar antes del próximo
+                    time.sleep(interval_hours * 3600)
+                else:
+                    self.log("⚠️ Error en pipeline. Reintentando en 30 minutos...", level="WARNING")
+                    time.sleep(1800)  # 30 minutos
+                    
+            except KeyboardInterrupt:
+                self.log("\n🛑 Sistema detenido por usuario")
+                self.log(f"📊 Total sitios creados: {sites_created}")
+                break
+            except Exception as e:
+                self.log(f"❌ Error crítico: {e}", level="ERROR")
+                self.log("⏳ Reintentando en 1 hora...", level="WARNING")
+                time.sleep(3600)
+
+
+def main():
+    """Punto de entrada principal"""
+    print("\n" + "="*60)
+    print("  SISTEMA AUTÓNOMO DE NEGOCIOS ONLINE v1.0")
+    print("="*60 + "\n")
+    
+    # Inicializar motor
+    engine = AutonomousEngine()
+    
+    # Mostrar resumen de configuración
+    print("✅ Motor inicializado correctamente\n")
+    
+    # Preguntar modo de operación
+    print("Selecciona modo de operación:")
+    print("  1) Crear UN sitio de prueba")
+    print("  2) Modo AUTÓNOMO (crear sitios continuamente)")
+    print("  3) Salir")
+    
+    choice = input("\nOpción (1/2/3): ").strip()
+    
+    if choice == "1":
+        # Modo de prueba
+        niche = engine.niches[0]  # Primer nicho
+        print(f"\n🧪 Creando sitio de prueba en nicho: {niche['name']}\n")
+        engine.build_business(niche)
+        print("\n✅ Prueba completada. Revisa ~/autonomous-business/sites/")
+        
+    elif choice == "2":
+        # Modo autónomo
+        interval = input("\nHoras entre cada sitio nuevo (default: 8): ").strip()
+        interval = float(interval) if interval else 8.0
+        
+        print(f"\n🤖 Iniciando modo autónomo (intervalo: {interval}h)")
+        print("💡 Presiona Ctrl+C para detener\n")
+        time.sleep(2)
+        
+        engine.run_autonomous(interval_hours=interval)
+        
+    else:
+        print("\n👋 Saliendo...")
+
+
+if __name__ == "__main__":
+    main()

@@ -1,0 +1,41 @@
+node_modules
+npm-debug.log
+.git
+.gitignore
+*.md
+!README.md
+Dockerfile
+.dockerignore
+cloudbuild.yaml
+deploy.sh
+local_agent.js
+
+# Project data (not needed in cloud)
+projects/
+pipeline/
+antigravity_project/
+instagram-dashboard/
+ios/
+_Archives/
+_Config/
+__pycache__/
+
+# Python files
+*.py
+*.pyc
+venv/
+
+# Temp files
+*.log
+*.tmp
+.env
+.env.local
+
+# IDE
+.vscode/
+.idea/
+
+# Test files
+test/
+tests/
+*.test.js
