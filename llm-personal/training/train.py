@@ -82,7 +82,7 @@ def main():
     
     # Get file stats
     size_mb = TRAINING_DATA.stat().st_size / (1024 * 1024)
-    with open(TRAINING_DATA) as f:
+    with open(TRAINING_DATA, encoding='utf-8') as f:
         num_samples = sum(1 for _ in f)
     
     print(f"\n📦 Training data:")
