@@ -1,8 +1,11 @@
 #!/bin/bash
-# 🚀 ANTIGRAVITY LAUNCHPAD v2: DEBUG EDITION
-# Verbose Logging | Error Handling | Real-time Feedback
+# 🚀 ANTIGRAVITY LAUNCHPAD v3: ULTRA DEBUG EDITION
+# Full Observability | API Call Tracing | Log File Generation
 
 set -e
+
+# Enable Bash tracing (Show every command executed)
+set -x
 
 # Colors
 GREEN='\033[0;32m'
@@ -15,18 +18,27 @@ NC='\033[0m'
 PROJECT_ID="gen-lang-client-0988614926"
 REGION="us-central1"
 DB_INSTANCE="antigravity-memory-v1"
+LOG_FILE="antigravity_debug.log"
 
+# Function to log both to screen and file
 function log() {
-    echo -e "${BLUE}[$(date +'%H:%M:%S')]${NC} $1"
+    TIMESTAMP=$(date +'%H:%M:%S')
+    echo -e "${BLUE}[$TIMESTAMP]${NC} $1" | tee -a "$LOG_FILE"
 }
 
-function error_exit() {
-    echo -e "${RED}❌ ERROR: $1${NC}"
-    exit 1
+function debug_gcloud() {
+    # Wrapper to run gcloud with debug verbosity
+    log "Executing gcloud with debug tracing..."
+    "$@" --verbosity=debug 2>&1 | tee -a "$LOG_FILE"
 }
+
+# Start Logging
+echo ">>> ANTIGRAVITY LAUNCHPAD v3 <<<" > "$LOG_FILE"
+date >> "$LOG_FILE"
 
 clear
-echo -e "${CYAN}>>> ANTIGRAVITY LAUNCHPAD v2 DEBUG MODE <<<${NC}"
+echo -e "${CYAN}>>> ANTIGRAVITY LAUNCHPAD v3 (ULTRA DEBUG) <<<${NC}"
+log "Detailed logs are being saved to: $(pwd)/$LOG_FILE"
 echo "---------------------------------------------"
 
 # 1. GIT CHECK
@@ -36,24 +48,23 @@ git pull || log "⚠️ Git pull failed (continuing anyway...)"
 # 2. INFRASTRUCTURE CHECK
 log "Checking Cloud SQL Instance '$DB_INSTANCE'..."
 
-# Try to describe instance to see if it exists
+# Use debug wrapper to see API calls
 if gcloud sql instances describe $DB_INSTANCE --project=$PROJECT_ID &> /dev/null; then
     echo -e "${GREEN}✓ Database instance found!${NC}"
     
-    # Check status
     STATUS=$(gcloud sql instances describe $DB_INSTANCE --project=$PROJECT_ID --format="value(state)")
     log "DB Status: $STATUS"
     
     if [ "$STATUS" != "RUNNABLE" ]; then
-        log "⚠️ DB is not RUNNABLE yet. Waiting..."
-        # Optional: wait logic, but for now we proceed
+        log "⚠️ DB is not RUNNABLE yet (Status: $STATUS)."
+        # Optional: wait loop could be added here
     fi
 else
     log "⚠️ Database NOT FOUND. Attempting creation..."
-    log "Executing: gcloud sql instances create..."
+    log "Detailed API call traces enabled below:"
     
-    # Verbosely create it (NO /dev/null)
-    gcloud sql instances create $DB_INSTANCE \
+    # Run creation with debug flags to see HTTP requests
+    debug_gcloud gcloud sql instances create $DB_INSTANCE \
         --database-version=POSTGRES_15 \
         --tier=db-custom-2-7680 \
         --region=$REGION \
@@ -63,11 +74,11 @@ else
     echo -e "${GREEN}✓ Database creation command finished.${NC}"
 fi
 
-# Secret creation (Idempotent)
+# Secret creation
 log "Checking Secrets..."
 if ! gcloud secrets describe antigravity-db-pass --project=$PROJECT_ID &> /dev/null; then
-    log "Creating secret 'antigravity-db-pass'..."
-    echo "supersecret" | gcloud secrets create antigravity-db-pass --data-file=- --project=$PROJECT_ID
+    log "Creating secret..."
+    echo "supersecret" | debug_gcloud gcloud secrets create antigravity-db-pass --data-file=- --project=$PROJECT_ID
 else
     log "✓ Secret already exists."
 fi
@@ -80,17 +91,17 @@ gcloud ai custom-jobs list --project=$PROJECT_ID --region=$REGION --limit=3 --fo
 log "Deploying Webhook to Cloud Run..."
 cd llm-personal/whatsapp
 
-# Create deploy script if missing (failsafe)
 if [ ! -f deploy.sh ]; then
-    error_exit "deploy.sh not found in $(pwd)"
+    echo -e "${RED}❌ ERROR: deploy.sh not found in $(pwd)${NC}"
+    exit 1
 fi
 
 chmod +x deploy.sh
-log "Running deploy.sh (Output visible below)..."
-# Run WITHOUT silencing output
-./deploy.sh
+log "Running deploy.sh..."
+# Execute deploy script with tracing
+bash -x ./deploy.sh 2>&1 | tee -a "../../$LOG_FILE"
 
-# Get URL Explicitly
+# Get URL
 log "Retrieving Service URL..."
 URL=$(gcloud run services describe antigravity-whatsapp --region $REGION --format 'value(status.url)' --project=$PROJECT_ID)
 
